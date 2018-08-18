@@ -1,0 +1,2 @@
+# numpy_neuron_network
+仅使用numpy从头构建神经网络
