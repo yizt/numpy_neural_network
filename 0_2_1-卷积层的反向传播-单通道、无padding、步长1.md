@@ -42,7 +42,7 @@ $$
 
 ## 约定说明
 
-a) $l$ 代表网络的第$l$ 层, $z^l$ 代表第$l$ 层卷积，$z_{i,j}^l$ 代表第$l$ 层卷积的$(i,j)$ 位置的值; $z^l$ 的高度和宽度分别为$H^l,\hat W^l$ (避免与权重相同)
+a) $l$ 代表网络的第$l$ 层, $z^l$ 代表第$l$ 层卷积，$z_{i,j}^l$ 代表第$l$ 层卷积的$(i,j)$ 位置的值; $z^l$ 的高度和宽度分别为$H^l,\hat W^l$ ($\color{red}{避免与权重相同}$)
 
 b) $W^{l-1},b^{l-1}$ 代表连接第$l-1$ 层和第$l$ 层的卷积核权重和偏置; 卷积核的维度为$(k_1^{l-1},k_2^{l-1})$ 。
 
@@ -51,7 +51,7 @@ c) 记损失函数L关于第$l$ 层卷积的输出$z^l$ 的偏导为$\delta^l = 
 根据以上约定第$l$ 层卷积输出为:
 $$
 \begin{align}
-&z^l_{i,j} = \sum_{m=0}^{k_1^{l-1}-1} \sum_{n=0}^{k_2^{l-1}-1} W_{m,n}^{l-1} z_{i+m,j+n}^{l-1} + b^{l-1}  & i \in [0,H^l-1], j\in [0,W^l-1]\tag 4
+&z^l_{i,j} = \sum_{m=0}^{k_1^{l-1}-1} \sum_{n=0}^{k_2^{l-1}-1} W_{m,n}^{l-1} z_{i+m,j+n}^{l-1} + b^{l-1}  & i \in [0,H^l-1], j\in [0,\hat W^l-1]\tag 4
 \end{align}
 $$
 其中：$H^l = H^{l-1} - k_1^{l-1} + 1;\ \ \ \ \  \hat W^l = \hat W^{l-1} - k_2^{l-1} + 1 $
@@ -93,7 +93,7 @@ $$
 = \sum_i \sum_j \frac {\partial L} {\partial z^l_{i,j}} * \frac {\partial z^l_{i,j}} {\partial z_{i^{\prime},j^{\prime}}^{l-1}} \\
 &=\sum_i \sum_j \delta^l_{i,j} * \frac {\partial ( \sum_{m=0}^{k_1^{l-1}} \sum_{n=0}^{k_2^{l-1}} W_{m,n}^{l-1} z_{i+m,j+n}^{l-1} + b^{l-1})} {\partial z_{i^{\prime},j^{\prime}}^{l-1}} &//当i=i^{\prime}-m, j=j^{\prime}-n时有梯度W^{l-1}_{m,n}\\
 &=\sum_i \sum_j \delta^l_{i,j}  W^{l-1}_{m,n} &//此时m=i^{\prime}-i ,n=j^{\prime}-j\\
-&=\sum_m \sum_n \delta^l_{i^{\prime}-m,j^{\prime}-n}W^{l-1}_{m,n}   \ \ \ \ \ \ \  (7) &//此时i=i^{\prime}-m \in[0,H^l-1],j=j^{\prime}-n \in [0,\hat W^{l-1}]  \\
+&=\sum_m \sum_n \delta^l_{i^{\prime}-m,j^{\prime}-n}W^{l-1}_{m,n}   \ \ \ \ \ \ \  (7) &//此时i=i^{\prime}-m \in[0,H^l-1],j=j^{\prime}-n \in [0,\hat W^l-1]  \\
 &=\sum_i \sum_j \delta^l_{i,j}  W^{l-1}_{i^{\prime}-i,j^{\prime}-j}  \ \ \ \ \ \ \  (8) &//需要满足i^{\prime}-i \in [0,k_1^{l-1}-1],j^{\prime}-j \in [0,k_2^{l-1}-1]
 \end{align}
 $$
@@ -106,13 +106,13 @@ $$
 
 ​            同时$i,j$ 需要满足公式(4)的约束条件:
 $$
-i\in [0,H^l-1], j\in [0,W^l-1] \tag {10}
+i\in [0,H^l-1], j\in [0,\hat W^l-1] \tag {10}
 $$
 ​            因此有
 $$
 \begin{cases}
 i \in [\max(0,i^{\prime}+1-k_1^{l-1}),\min(H^l-1,i^{\prime})] \\
-j \in [\max(0,j^{\prime}+1-k_2^{l-1}),\min(W^l-1,j^{\prime})]   \tag {11}
+j \in [\max(0,j^{\prime}+1-k_2^{l-1}),\min(\hat W^l-1,j^{\prime})]   \tag {11}
 \end{cases}
 $$
 ​          下面来看一个例子，对于l-1层 $5 \times 5$ 的卷积层，卷积核$3 \times 3$ , 则输出的l层卷积大小为5-3-1=3，也就是$3 \times 3$ , 此时有：
@@ -186,8 +186,8 @@ $$
 &=\sum_{m^{\prime}=0}^{k_1^{l-1}-1} \sum_{n^{\prime}=0}^{k_2^{l-1}-1}W_{m^{\prime},n^{\prime}}\ p\delta^{l}_{i+k^{l-1}_1-1-m^{\prime},j+k_2^{l-1}-1-n^{\prime}} \ \ \ \ \ //m^{\prime} +m =k_1^{l-1} -1,n^{\prime}+n=k_2^{l-1}-1 \\
 &=\sum_{m=0}^{k_1^{l-1}-1} \sum_{n=0}^{k_2^{l-1}-1}W_{m,n}\ p\delta^{l}_{i+k^{l-1}_1-1-m,j+k_2^{l-1}-1-n}    \ \ \ \ \ //将下标改回来  \\
 &=
-\sum_{m=0}^{k_1^{l-1}-1} \sum_{n=0}^{k_2^{l-1}-1}W_{m,n}\ \begin{cases} \delta^{l}_{i-m,j-n}  &//i-m \in [0,H^l-1] 且j-n \in[0,\hat W^l] \\
-0    &//i-m \notin [0,H^l-1] 或j-n \notin[0,\hat W^l] \tag {15}
+\sum_{m=0}^{k_1^{l-1}-1} \sum_{n=0}^{k_2^{l-1}-1}W_{m,n}\ \begin{cases} \delta^{l}_{i-m,j-n}  &//i-m \in [0,H^l-1] 且j-n \in[0,\hat W^l-1] \\
+0    &//i-m \notin [0,H^l-1] 或j-n \notin[0,\hat W^l-1] \tag {15}
 \end{cases}
 \end{align}
 $$
@@ -200,7 +200,7 @@ $$
 a) 卷积前向计算公式如下:
 $$
 \begin{align}
-&z^l_{i,j} = \sum_{m=0}^{k_1^{l-1}-1} \sum_{n=0}^{k_2^{l-1}-1} W_{m,n}^{l-1} z_{i+m,j+n}^{l-1} + b^{l-1}  & i \in [0,H^l-1], j\in [0,W^l-1]\tag 4
+&z^l_{i,j} = \sum_{m=0}^{k_1^{l-1}-1} \sum_{n=0}^{k_2^{l-1}-1} W_{m,n}^{l-1} z_{i+m,j+n}^{l-1} + b^{l-1}  & i \in [0,H^l-1], j\in [0,\hat W^l-1]\tag 4
 \end{align}
 $$
 b) 损失函数$L$关于第$l-1$层权重$W^{l-1}$ 的梯度，是以损失函数$L$关于第$l$层梯度 $\delta^l$ 为卷积核在$z^{l-1}$上做卷积的结果
