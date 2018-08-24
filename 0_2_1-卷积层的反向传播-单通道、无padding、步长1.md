@@ -1,4 +1,6 @@
-​     
+[TOC]
+
+
 
 ## 依赖知识
 
@@ -36,7 +38,9 @@ $$
 (I \ast K)_{ij} &= \sum_{m = 0}^{k_1 - 1} \sum_{n = 0}^{k_2 - 1} \sum_{c = 1}^{C} K_{m,n,c} \cdot I_{i+m, j+n, c} + b \tag {2}
 \end{align}
 $$
-​          有心读者肯定会疑惑公式(2),没有体现padding和卷积核的步长。由于卷积相对复杂，没有办法一次性说明的非常清楚，计划分几次来逐步说明；本文接下来将推导最简单的卷积反向传播公式。假定输入输出通道都为1，即$C=D=1$, 且卷积核的padding=0,步长为1。
+​          
+
+​           有心读者肯定会疑惑公式(2),没有体现padding和卷积核的步长。由于卷积相对复杂，没有办法一次性说明的非常清楚，计划分几次来逐步说明；本文接下来将推导最简单的卷积反向传播公式。假定输入输出通道都为1，即$C=D=1$, 且卷积核的padding=0,步长为1。
 
 
 
@@ -66,7 +70,7 @@ a) 首先来看损失函数$L$关于第$l-1$层权重$W^{l-1}$和偏置$b^{l-1}$
 $$
 \begin{align}
 &\frac {\partial L} {\partial W_{m,n}^{l-1}} 
-= \sum_i \sum_j \frac {\partial L} {\partial z^l_{i,j}} * \frac {\partial z^l{i,j}} {\partial W_{m,n}^{l-1}} &//l层的每个神经元都有梯度传给权重W^{l-1}_{m,n}\\
+= \sum_i \sum_j \frac {\partial L} {\partial z^l_{i,j}} * \frac {\partial z^l_{i,j}} {\partial W_{m,n}^{l-1}} &//l层的每个神经元都有梯度传给权重W^{l-1}_{m,n}\\
 &=\sum_i \sum_j \delta^l_{i,j} * \frac {\partial ( \sum_{m=0}^{k_1^{l-1}} \sum_{n=0}^{k_2^{l-1}} W_{m,n}^{l-1} z_{i+m,j+n}^{l-1} + b^{l-1})} {\partial W^{l-1}_{m,n}} \\
 &=\sum_i \sum_j \delta^l_{i,j} * z^{l-1}_{i+m,j+n} \tag 5
 \end{align} \\
