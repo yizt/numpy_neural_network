@@ -29,7 +29,7 @@ c) 记损失函数L关于第$l$ 层卷积的输出$z^l$ 的偏导为$\delta^l = 
 ​      则有第$l$ 层卷积层,第$d$个通道输出为:
 $$
 \begin{align}
-&z^l_{d,i,j} = \sum_{c=1}^{C^{l-1}}\sum_{m=0}^{k_1^{l-1}-1} \sum_{n=0}^{k_2^{l-1}-1} W_{m,n,c,d}^{l-1} z_{c,i+m,j+n}^{l-1} + b^{l-1}  & i \in [0,H^l-1], j\in [0,\hat W^l-1]\tag 4
+&z^l_{d,i,j} = \sum_{c=1}^{C^{l-1}}\sum_{m=0}^{k_1^{l-1}-1} \sum_{n=0}^{k_2^{l-1}-1} W_{m,n,c,d}^{l-1} z_{c,i+m,j+n}^{l-1} + b^{l-1}_d  & i \in [0,H^l-1], j\in [0,\hat W^l-1]\tag 4
 \end{align}
 $$
 其中：$H^l = H^{l-1} - k_1^{l-1} + 1;\ \ \ \ \  \hat W^l = \hat W^{l-1} - k_2^{l-1} + 1 $ ; 注意前后通道直接相当于全连接，即前后两个卷积层直接所有通道都互相连接。
@@ -45,7 +45,7 @@ $$
 \begin{align}
 &\frac {\partial L} {\partial W_{m,n,c,d}^{l-1}} 
 = \sum_i \sum_j \frac {\partial L} {\partial z^l_{d,i,j}} * \frac {\partial z^l_{d,i,j}} {\partial W_{m,n,c,d}^{l-1}} &//l层的d通道每个神经元都有梯度传给权重W^{l-1}_{m,n,c,d}\\
-&=\sum_i \sum_j \delta^l_{d,i,j} * \frac {\partial ( \sum_{c=1}^{C^{l-1}}\sum_{m=0}^{k_1^{l-1}-1} \sum_{n=0}^{k_2^{l-1}-1} W_{m,n,c,d}^{l-1} z_{c,i+m,j+n}^{l-1} + b^{l-1}  )} {\partial W^{l-1}_{m,n,c,d}}  \\
+&=\sum_i \sum_j \delta^l_{d,i,j} * \frac {\partial ( \sum_{c=1}^{C^{l-1}}\sum_{m=0}^{k_1^{l-1}-1} \sum_{n=0}^{k_2^{l-1}-1} W_{m,n,c,d}^{l-1} z_{c,i+m,j+n}^{l-1} + b^{l-1}_d  )} {\partial W^{l-1}_{m,n,c,d}}  \\
 &=\sum_i \sum_j \delta^l_{d,i,j} * z^{l-1}_{c,i+m,j+n} \tag 5
 \end{align} \\
 $$
@@ -79,4 +79,3 @@ p\delta^l_{d,i,j}=\begin{cases}
 0 & i,j其它情况 \tag {12}
 \end{cases}
 $$
-   
