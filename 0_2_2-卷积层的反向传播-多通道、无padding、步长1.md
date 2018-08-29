@@ -79,3 +79,4 @@ p\delta^l_{d,i,j}=\begin{cases}
 0 & i,j其它情况 \tag {12}
 \end{cases}
 $$
+
