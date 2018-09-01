@@ -12,7 +12,7 @@ import numpy as np
 def fc_forword(z, W, b):
     """
     全连接层的前向传播
-    :param z: 当前层的输出
+    :param z: 当前层的输出,形状 (N,ln)
     :param W: 当前层的权重
     :param b: 当前层的偏置
     :return: 下一层的输出
@@ -28,10 +28,11 @@ def fc_backword(next_dz, W, z):
     :param z: 当前层的输出
     :return:
     """
+    N = z.shape[0]
     dz = np.dot(next_dz, W.T)  # 当前层的梯度
     dw = np.dot(z.T, next_dz)  # 当前层权重的梯度
     db = np.sum(next_dz, axis=0)  # 当前层偏置的梯度, N个样本的梯度求和
-    return dw, db, dz
+    return dw / N, db / N, dz
 
 
 def _single_channel_conv(z, K, b=0, padding=(0, 0), strides=(1, 1)):
@@ -80,6 +81,53 @@ def conv_forword(z, K, b, padding=(0, 0), strides=(1, 1)):
     return conv_z
 
 
+def _insert_zeros(dz, strides):
+    _, _, H, W = dz.shape
+    pz = dz
+    for h in np.arange(H - 1, 0, -1):
+        for o in np.arange(strides[0] - 1):
+            pz = np.insert(pz, h, 0, axis=2)
+    for w in np.arange(W - 1, 0, -1):
+        for o in np.arange(strides[1] - 1):
+            pz = np.insert(pz, w, 0, axis=3)
+    return pz
+
+
+def conv_back(next_dz, K, z, padding=(0, 0), strides=(1, 1)):
+    """
+    多通道卷积层的反向过程
+    :param next_dz: 卷积输出层的梯度,(N,D,H',W"),H',W'为卷积输出层的高度和宽度
+    :param K: 当前层卷积核，(C,D,k1,k2)
+    :param z: 卷积层矩阵,形状(N,C,H,W)，N为batch_size，C为通道数
+    :param padding: padding
+    :param strides: 步长
+    :return:
+    """
+    N = z.shape[0]
+    C, D, k1, k2 = K.shape
+    dK = np.zeros((C, D, k1, k2))
+    padding_next_dz = _insert_zeros(next_dz, strides)
+    for n in np.arange(N):
+        for c in np.arange(C):
+            for d in np.arange(D):
+                dK[c, d] += _single_channel_conv(z[n, c], padding_next_dz[d])
+    db = np.sum(np.sum(next_dz, axis=-1), axis=-1)
+
+    # 卷积核高度和宽度翻转180度
+    flip_K = np.flip(K, (2, 3))
+    padding_next_dz = np.lib.pad(next_dz, ((0, 0), (0, 0), (k1 - 1, k1 - 1), (k2 - 1, k2 - 1)), 'constant', constant_values=0)
+    dz = np.zeros_like(z)
+    for n in np.arange(N):
+        for c in np.arange(C):
+            for d in np.arange(D):
+                dz[n, c] += _single_channel_conv(padding_next_dz[n, d], flip_K[c, d])
+
+    # 把padding减掉
+    dz = dz[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
+
+    return dK / N, db / N, dz
+
+
 if __name__ == "__main__":
     z = np.ones((5, 5))
     k = np.ones((3, 3))
@@ -92,6 +140,13 @@ if __name__ == "__main__":
     assert _single_channel_conv(z, k, strides=(2, 2), padding=(1, 1)).shape == (3, 3)
     assert _single_channel_conv(z, k, strides=(2, 2), padding=(1, 0)).shape == (3, 2)
     assert _single_channel_conv(z, k, strides=(2, 1), padding=(1, 1)).shape == (3, 5)
+
+    dz = np.ones((1, 1, 3, 3))
+    assert _insert_zeros(dz, (1, 1)).shape == (1, 1, 3, 3)
+    print(_insert_zeros(dz, (3, 2)))
+    assert _insert_zeros(dz, (1, 2)).shape == (1, 1, 3, 5)
+    assert _insert_zeros(dz, (2, 2)).shape == (1, 1, 5, 5)
+    assert _insert_zeros(dz, (2, 4)).shape == (1, 1, 5, 9)
 
     z = np.ones((8, 16, 5, 5))
     k = np.ones((16, 32, 3, 3))
