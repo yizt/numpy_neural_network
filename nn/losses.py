@@ -16,8 +16,8 @@ def mean_squared_loss(y_predict, y_true):
     :param y_true: 真实值
     :return:
     """
-    loss = np.mean(np.square(y_predict - y_true, axis=-1))  # 损失函数值
-    dy = np.mean(y_predict - y_true)  # 损失函数关于网络输出的梯度
+    loss = np.mean(np.sum(np.square(y_predict - y_true), axis=-1))  # 损失函数值
+    dy = y_predict - y_true  # 损失函数关于网络输出的梯度
     return loss, dy
 
 
