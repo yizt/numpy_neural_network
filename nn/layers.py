@@ -9,7 +9,7 @@ Created on 2018/8/19 15:03
 import numpy as np
 
 
-def fc_forword(z, W, b):
+def fc_forward(z, W, b):
     """
     全连接层的前向传播
     :param z: 当前层的输出,形状 (N,ln)
@@ -20,7 +20,7 @@ def fc_forword(z, W, b):
     return np.dot(z, W) + b
 
 
-def fc_backword(next_dz, W, z):
+def fc_backward(next_dz, W, z):
     """
     全连接层的反向传播
     :param next_dz: 下一层的梯度
@@ -57,7 +57,7 @@ def _single_channel_conv(z, K, b=0, padding=(0, 0), strides=(1, 1)):
     return conv_z + b
 
 
-def conv_forword(z, K, b, padding=(0, 0), strides=(1, 1)):
+def conv_forward(z, K, b, padding=(0, 0), strides=(1, 1)):
     """
     多通道卷积前向过程
     :param z: 卷积层矩阵,形状(N,C,H,W)，N为batch_size，C为通道数
@@ -151,5 +151,5 @@ if __name__ == "__main__":
     z = np.ones((8, 16, 5, 5))
     k = np.ones((16, 32, 3, 3))
     b = np.ones((32))
-    assert conv_forword(z, k, b).shape == (8, 32, 3, 3)
-    print(conv_forword(z, k, b)[0, 0])
+    assert conv_forward(z, k, b).shape == (8, 32, 3, 3)
+    print(conv_forward(z, k, b)[0, 0])
