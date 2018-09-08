@@ -82,6 +82,12 @@ def conv_forward(z, K, b, padding=(0, 0), strides=(1, 1)):
 
 
 def _insert_zeros(dz, strides):
+    """
+    想多维数组最后两位，每个行列之间增加指定的个数的零填充
+    :param dz: (N,D,H,W),H,W为卷积输出层的高度和宽度
+    :param strides: 步长
+    :return:
+    """
     _, _, H, W = dz.shape
     pz = dz
     for h in np.arange(H - 1, 0, -1):
@@ -96,7 +102,7 @@ def _insert_zeros(dz, strides):
 def conv_back(next_dz, K, z, padding=(0, 0), strides=(1, 1)):
     """
     多通道卷积层的反向过程
-    :param next_dz: 卷积输出层的梯度,(N,D,H',W"),H',W'为卷积输出层的高度和宽度
+    :param next_dz: 卷积输出层的梯度,(N,D,H,W),H,W为卷积输出层的高度和宽度
     :param K: 当前层卷积核，(C,D,k1,k2)
     :param z: 卷积层矩阵,形状(N,C,H,W)，N为batch_size，C为通道数
     :param padding: padding
@@ -128,6 +134,73 @@ def conv_back(next_dz, K, z, padding=(0, 0), strides=(1, 1)):
     return dK / N, db / N, dz
 
 
+def max_pooling_forward(z, pooling, strides=(2, 2), padding=(0, 0)):
+    """
+    最大池化前向过程
+    :param z: 卷积层矩阵,形状(N,C,H,W)，N为batch_size，C为通道数
+    :param pooling: 池化大小(k1,k2)
+    :param strides: 步长
+    :param padding: 0填充
+    :return:
+    """
+    N, C, H, W = z.shape
+    # 零填充
+    padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]), (padding[1], padding[1])), 'constant', constant_values=0)
+
+    # 输出的高度和宽度
+    out_h = (H + 2 * padding[0] - pooling[0]) // strides[0] + 1
+    out_w = (W + 2 * padding[1] - pooling[1]) // strides[1] + 1
+
+    pool_z = np.zeros_like((N, C, out_h, out_w))
+
+    for n in np.range(N):
+        for c in np.range(C):
+            for i in np.range(out_h):
+                for j in np.range(out_w):
+                    pool_z[n, c, i, j] = np.max(padding_z[n, c,
+                                                          strides[0] * i:strides[0] * i + pooling[0],
+                                                          strides[1] * j, strides[1] * j + pooling[1]])
+
+    return pool_z
+
+
+def avg_pooling_forward(z, pooling, strides=(2, 2), padding=(0, 0)):
+    """
+    平均池化前向过程
+    :param z: 卷积层矩阵,形状(N,C,H,W)，N为batch_size，C为通道数
+    :param pooling: 池化大小(k1,k2)
+    :param strides: 步长
+    :param padding: 0填充
+    :return:
+    """
+    N, C, H, W = z.shape
+    # 零填充
+    padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]), (padding[1], padding[1])), 'constant',
+                           constant_values=0)
+
+    # 输出的高度和宽度
+    out_h = (H + 2 * padding[0] - pooling[0]) // strides[0] + 1
+    out_w = (W + 2 * padding[1] - pooling[1]) // strides[1] + 1
+
+    pool_z = np.zeros_like((N, C, out_h, out_w))
+
+    for n in np.range(N):
+        for c in np.range(C):
+            for i in np.range(out_h):
+                for j in np.range(out_w):
+                    pool_z[n, c, i, j] = np.mean(padding_z[n, c,
+                                                strides[0] * i:strides[0] * i + pooling[0],
+                                                strides[1] * j, strides[1] * j + pooling[1]])
+
+    return pool_z
+
+
+def max_pooling_backward(next_dz,z, pooling, strides=(2, 2), padding=(0, 0)):
+
+    pass
+
+
+
 if __name__ == "__main__":
     z = np.ones((5, 5))
     k = np.ones((3, 3))
@@ -153,3 +226,5 @@ if __name__ == "__main__":
     b = np.ones((32))
     assert conv_forward(z, k, b).shape == (8, 32, 3, 3)
     print(conv_forward(z, k, b)[0, 0])
+
+    print(np.mean(np.array([[1,2],[3,4]])))
