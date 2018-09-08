@@ -160,8 +160,40 @@ def max_pooling_forward(z, pooling, strides=(2, 2), padding=(0, 0)):
                     pool_z[n, c, i, j] = np.max(padding_z[n, c,
                                                           strides[0] * i:strides[0] * i + pooling[0],
                                                           strides[1] * j, strides[1] * j + pooling[1]])
-
     return pool_z
+
+
+def max_pooling_backward(next_dz, z, pooling, strides=(2, 2), padding=(0, 0)):
+    """
+    最大池化反向过程
+    :param next_dz：损失函数关于最大池化输出的损失
+    :param z: 卷积层矩阵,形状(N,C,H,W)，N为batch_size，C为通道数
+    :param pooling: 池化大小(k1,k2)
+    :param strides: 步长
+    :param padding: 0填充
+    :return:
+    """
+    N, C, H, W = z.shape
+    _, _, out_h, out_w = next_dz.shape
+    # 零填充
+    padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]), (padding[1], padding[1])), 'constant',
+                           constant_values=0)
+    # 零填充后的梯度
+    padding_dz = np.zeros((N, C, H + 2 * padding[0], W + 2 * padding))
+
+    for n in np.range(N):
+        for c in np.range(C):
+            for i in np.range(out_h):
+                for j in np.range(out_w):
+                    # 找到最大值的那个元素坐标，将梯度传给这个坐标
+                    flat_idx = np.argmax(padding_z[n, c,
+                                          strides[0] * i:strides[0] * i + pooling[0],
+                                          strides[1] * j, strides[1] * j + pooling[1]])
+                    h_idx = flat_idx // out_w
+                    w_idx = flat_idx % out_w
+                    padding_dz[n, c, h_idx, w_idx] += next_dz[n, c, i, j]
+    # 返回时剔除零填充
+    return padding_z[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
 
 
 def avg_pooling_forward(z, pooling, strides=(2, 2), padding=(0, 0)):
@@ -189,16 +221,10 @@ def avg_pooling_forward(z, pooling, strides=(2, 2), padding=(0, 0)):
             for i in np.range(out_h):
                 for j in np.range(out_w):
                     pool_z[n, c, i, j] = np.mean(padding_z[n, c,
-                                                strides[0] * i:strides[0] * i + pooling[0],
-                                                strides[1] * j, strides[1] * j + pooling[1]])
+                                                           strides[0] * i:strides[0] * i + pooling[0],
+                                                           strides[1] * j, strides[1] * j + pooling[1]])
 
     return pool_z
-
-
-def max_pooling_backward(next_dz,z, pooling, strides=(2, 2), padding=(0, 0)):
-
-    pass
-
 
 
 if __name__ == "__main__":
@@ -227,4 +253,4 @@ if __name__ == "__main__":
     assert conv_forward(z, k, b).shape == (8, 32, 3, 3)
     print(conv_forward(z, k, b)[0, 0])
 
-    print(np.mean(np.array([[1,2],[3,4]])))
+    print(np.argmax(np.array([[1, 2], [3, 4]])))
