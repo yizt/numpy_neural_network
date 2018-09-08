@@ -258,7 +258,7 @@ def avg_pooling_backward(next_dz, z, pooling, strides=(2, 2), padding=(0, 0)):
 
 def global_max_pooling_forward(z):
     """
-    全局最大池化
+    全局最大池化前向过程
     :param z: 卷积层矩阵,形状(N,C,H,W)，N为batch_size，C为通道数
     :return:
     """
@@ -281,6 +281,31 @@ def global_max_pooling_forward(next_dz, z):
             h_idx = idx // W
             w_idx = idx % W
             dz[n, c, h_idx, w_idx] = next_dz[n, c]
+    return dz
+
+
+def global_avg_pooling_forward(z):
+    """
+    全局平均池化前向过程
+    :param z: 卷积层矩阵,形状(N,C,H,W)，N为batch_size，C为通道数
+    :return:
+    """
+    return np.mean(np.mean(z, axis=-1), axis=-1)
+
+
+def global_avg_pooling_backward(next_dz, z):
+    """
+    全局平均池化反向过程
+    :param next_dz: 全局最大池化梯度，形状(N,C)
+    :param z: 卷积层矩阵,形状(N,C,H,W)，N为batch_size，C为通道数
+    :return:
+    """
+    N, C, H, W = z.shape
+    dz = np.zeros_like(z)
+    for n in np.range(N):
+        for c in np.range(C):
+            # 梯度平分给相关神经元
+            dz[n, c, :, :] += next_dz[n, c] / (H * W)
     return dz
 
 
