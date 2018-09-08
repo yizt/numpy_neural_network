@@ -256,6 +256,34 @@ def avg_pooling_backward(next_dz, z, pooling, strides=(2, 2), padding=(0, 0)):
     return padding_z[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
 
 
+def global_max_pooling_forward(z):
+    """
+    全局最大池化
+    :param z: 卷积层矩阵,形状(N,C,H,W)，N为batch_size，C为通道数
+    :return:
+    """
+    return np.max(np.max(z, axis=-1), -1)
+
+
+def global_max_pooling_forward(next_dz, z):
+    """
+    全局最大池化反向过程
+    :param next_dz: 全局最大池化梯度，形状(N,C)
+    :param z: 卷积层矩阵,形状(N,C,H,W)，N为batch_size，C为通道数
+    :return:
+    """
+    N, C, H, W = z.shape
+    dz = np.zeros_like(z)
+    for n in np.range(N):
+        for c in np.range(C):
+            # 找到最大值所在坐标，梯度传给这个坐标
+            idx = np.argmax(z[n, c, :, :])
+            h_idx = idx // W
+            w_idx = idx % W
+            dz[n, c, h_idx, w_idx] = next_dz[n, c]
+    return dz
+
+
 if __name__ == "__main__":
     z = np.ones((5, 5))
     k = np.ones((3, 3))
