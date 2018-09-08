@@ -90,6 +90,8 @@ $$
 
 ​           注：设矩阵$A=(a_{i,j})_{m \times n}$ 则$(a_{i,j})_{2 \le i <5; 4 \le j <8}$ 代表高度为第2行到第5行，宽度为第4列到第8列组成的矩阵
 
+
+
 ### Average Pooling
 
 ​           由公式(2)可知l层在高度i和宽度j上接收l-1层坐标范围分别是$[{i\cdot s_1^{l-1}},{i\cdot s_1^{l-1}+k_1^{l-1}-1}]  \text{和}[{j\cdot s_2^{l-1}},{j\cdot s_2^{l-1}+k_2^{l-1}-1}]$ ; 即
@@ -114,3 +116,27 @@ $$
 \end{align}
 $$
 ​           其中(i,j)满足公式(8)的条件，并且大于等于0
+
+
+
+### Global Max Pooling
+
+​           全局最大池化的反向公式如下
+$$
+\begin{align}
+&\delta_{c,i,j}^{l-1}=\begin{cases}
+\delta^l_c ;  &如果(i,j)=\arg\max_{m,n}(z_{c,m,n}) \\
+0 ; &其它  \tag {10}
+\end{cases}
+\end{align}
+$$
+​           注意第l层是一维的
+
+### Global Average Pooling
+
+​        全局平均池化就是后一层梯度平均的分给前一层所有的神经元，反向公式如下：
+$$
+\delta_{c,i,j}^{l-1}=\delta^l_c/(H^l \cdot \hat W^{l-1})  \tag {12}
+$$
+
+
