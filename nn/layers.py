@@ -126,7 +126,7 @@ def conv_backward(next_dz, K, z, padding=(0, 0), strides=(1, 1)):
     :param strides: 步长
     :return:
     """
-    N = z.shape[0]
+    N, C, H, W = z.shape
     C, D, k1, k2 = K.shape
 
     # 卷积核梯度
@@ -136,7 +136,7 @@ def conv_backward(next_dz, K, z, padding=(0, 0), strides=(1, 1)):
     # 卷积核高度和宽度翻转180度
     flip_K = np.flip(K, (2, 3))
     ppadding_next_dz = np.lib.pad(padding_next_dz, ((0, 0), (0, 0), (k1 - 1, k1 - 1), (k2 - 1, k2 - 1)), 'constant', constant_values=0)
-    dz = np.zeros_like(z)
+    dz = np.zeros((N, C, H + 2 * padding[0], W + 2 * padding[1]))
     for n in np.arange(N):
         for c in np.arange(C):
             for d in np.arange(D):
