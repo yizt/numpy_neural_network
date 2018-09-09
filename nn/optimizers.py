@@ -10,7 +10,7 @@ Created on 2018/9/4 22:26
 import numpy as np
 
 
-def _copy_weights_to_zeros(self, weights):
+def _copy_weights_to_zeros(weights):
     result = {}
     result.keys()
     for key in weights.keys():
@@ -45,7 +45,7 @@ class SGD(object):
         :return:
         """
         # 更新学习率
-        self.lr = self.init_lr / (1 + self.iterations)
+        self.lr = self.init_lr / (1 + self.iterations * self.decay)
         # 更新动量和梯度
         for key in self.v.keys():
             self.v[key] = self.momentum * self.v[key] + self.lr * gradients[key]
@@ -81,7 +81,7 @@ class AdaGrad(object):
         :return:
         """
         # 更新学习率
-        self.lr = self.init_lr / (1 + self.iterations)
+        self.lr = self.init_lr / (1 + self.iterations * self.decay)
 
         # 更新权重平方和累加量 和 梯度
         for key in self.s.keys():
@@ -120,7 +120,7 @@ class RmsProp(object):
         :return:
         """
         # 更新学习率
-        self.lr = self.init_lr / (1 + self.iterations)
+        self.lr = self.init_lr / (1 + self.iterations * self.decay)
 
         # 更新权重平方和累加量 和 梯度
         for key in self.s.keys():
