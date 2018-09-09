@@ -146,7 +146,7 @@ def conv_backward(next_dz, K, z, padding=(0, 0), strides=(1, 1)):
                 dz[n, c] += _single_channel_conv(padding_next_dz[n, d], flip_K[c, d])
 
     # 把padding减掉
-    dz = _remove_padding(dz, padding) #dz[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
+    dz = _remove_padding(dz, padding)  # dz[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
 
     return dK / N, db / N, dz
 
@@ -210,7 +210,7 @@ def max_pooling_backward(next_dz, z, pooling, strides=(2, 2), padding=(0, 0)):
                     w_idx = strides[1] * j + flat_idx % pooling[0]
                     padding_dz[n, c, h_idx, w_idx] += next_dz[n, c, i, j]
     # 返回时剔除零填充
-    return _remove_padding(padding_dz, padding) # padding_z[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
+    return _remove_padding(padding_dz, padding)  # padding_z[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
 
 
 def avg_pooling_forward(z, pooling, strides=(2, 2), padding=(0, 0)):
@@ -270,7 +270,7 @@ def avg_pooling_backward(next_dz, z, pooling, strides=(2, 2), padding=(0, 0)):
                                strides[0] * i:strides[0] * i + pooling[0],
                                strides[1] * j:strides[1] * j + pooling[1]] += next_dz[n, c, i, j] / (pooling[0] * pooling[1])
     # 返回时剔除零填充
-    return _remove_padding(padding_dz,padding)# padding_z[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
+    return _remove_padding(padding_dz, padding)  # padding_z[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
 
 
 def global_max_pooling_forward(z):
@@ -324,6 +324,26 @@ def global_avg_pooling_backward(next_dz, z):
             # 梯度平分给相关神经元
             dz[n, c, :, :] += next_dz[n, c] / (H * W)
     return dz
+
+
+def flatten_forward(z):
+    """
+    将多维数组打平，前向传播
+    :param z: 多维数组,形状(N,d1,d2,..)
+    :return:
+    """
+    N = z.shape[0]
+    return np.reshape(z, (N, -1))
+
+
+def flatten_backward(next_dz, z):
+    """
+    打平层反向传播
+    :param next_dz:
+    :param z:
+    :return:
+    """
+    return np.reshape(next_dz, z.shape)
 
 
 if __name__ == "__main__":
