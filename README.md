@@ -26,7 +26,7 @@
 
 [0_2_4-卷积层的反向传播-多通道、有padding、步长不为1](0_2_4-卷积层的反向传播-多通道、有padding、步长不为1.md)
 
-[0_2_5-池化层的反向传播-MaxPooling、AveragePooling、GlobalAveragePooling、GlobalMaxPooling](0_2_5-池化层的反向传播-Max Pooling、Average Pooling、Global Average Pooling.md)
+[0_2_5-池化层的反向传播-MaxPooling、AveragePooling、GlobalAveragePooling、GlobalMaxPooling](0_2_5-池化层的反向传播-MaxPooling、AveragePooling、GlobalAveragePooling.md)
 
 [0_3-激活函数的反向传播-ReLU、LeakyReLU、PReLU、ELU、SELU](0_3-激活函数的反向传播-ReLU、LeakyReLU、PReLU、ELU、SELU.md)
 
