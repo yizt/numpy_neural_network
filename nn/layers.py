@@ -57,6 +57,23 @@ def _single_channel_conv(z, K, b=0, padding=(0, 0), strides=(1, 1)):
     return conv_z + b
 
 
+def _remove_padding(z, paddings):
+    """
+    移除padding
+    :param z: (N,C,H,W)
+    :param paddings: (p1,p2)
+    :return:
+    """
+    if paddings[0] > 0 and paddings[1] > 0:
+        return z[:, :, paddings[0]:-paddings[0], paddings[1]:-paddings[1]]
+    elif paddings[0] > 0:
+        return z[:, :, paddings[0]:-paddings[0], :]
+    elif paddings[1] > 0:
+        return z[:, :, :, paddings[1]:-paddings[1]]
+    else:
+        return z
+
+
 def conv_forward(z, K, b, padding=(0, 0), strides=(1, 1)):
     """
     多通道卷积前向过程
@@ -99,7 +116,7 @@ def _insert_zeros(dz, strides):
     return pz
 
 
-def conv_back(next_dz, K, z, padding=(0, 0), strides=(1, 1)):
+def conv_backward(next_dz, K, z, padding=(0, 0), strides=(1, 1)):
     """
     多通道卷积层的反向过程
     :param next_dz: 卷积输出层的梯度,(N,D,H,W),H,W为卷积输出层的高度和宽度
@@ -116,12 +133,12 @@ def conv_back(next_dz, K, z, padding=(0, 0), strides=(1, 1)):
     for n in np.arange(N):
         for c in np.arange(C):
             for d in np.arange(D):
-                dK[c, d] += _single_channel_conv(z[n, c], padding_next_dz[d])
-    db = np.sum(np.sum(next_dz, axis=-1), axis=-1)
+                dK[c, d] += _single_channel_conv(z[n, c], padding_next_dz[n, d])
+    db = np.sum(np.sum(np.sum(next_dz, axis=-1), axis=-1), axis=0)  # 在高度、宽度上相加；批量大小上相加
 
     # 卷积核高度和宽度翻转180度
     flip_K = np.flip(K, (2, 3))
-    padding_next_dz = np.lib.pad(next_dz, ((0, 0), (0, 0), (k1 - 1, k1 - 1), (k2 - 1, k2 - 1)), 'constant', constant_values=0)
+    padding_next_dz = np.lib.pad(padding_next_dz, ((0, 0), (0, 0), (k1 - 1, k1 - 1), (k2 - 1, k2 - 1)), 'constant', constant_values=0)
     dz = np.zeros_like(z)
     for n in np.arange(N):
         for c in np.arange(C):
@@ -129,7 +146,7 @@ def conv_back(next_dz, K, z, padding=(0, 0), strides=(1, 1)):
                 dz[n, c] += _single_channel_conv(padding_next_dz[n, d], flip_K[c, d])
 
     # 把padding减掉
-    dz = dz[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
+    dz = _remove_padding(dz, padding) #dz[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
 
     return dK / N, db / N, dz
 
@@ -151,12 +168,12 @@ def max_pooling_forward(z, pooling, strides=(2, 2), padding=(0, 0)):
     out_h = (H + 2 * padding[0] - pooling[0]) // strides[0] + 1
     out_w = (W + 2 * padding[1] - pooling[1]) // strides[1] + 1
 
-    pool_z = np.zeros_like((N, C, out_h, out_w))
+    pool_z = np.zeros((N, C, out_h, out_w))
 
-    for n in np.range(N):
-        for c in np.range(C):
-            for i in np.range(out_h):
-                for j in np.range(out_w):
+    for n in np.arange(N):
+        for c in np.arange(C):
+            for i in np.arange(out_h):
+                for j in np.arange(out_w):
                     pool_z[n, c, i, j] = np.max(padding_z[n, c,
                                                           strides[0] * i:strides[0] * i + pooling[0],
                                                           strides[1] * j:strides[1] * j + pooling[1]])
@@ -179,21 +196,21 @@ def max_pooling_backward(next_dz, z, pooling, strides=(2, 2), padding=(0, 0)):
     padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]), (padding[1], padding[1])), 'constant',
                            constant_values=0)
     # 零填充后的梯度
-    padding_dz = np.zeros((N, C, H + 2 * padding[0], W + 2 * padding))
+    padding_dz = np.zeros_like(padding_z)
 
-    for n in np.range(N):
-        for c in np.range(C):
-            for i in np.range(out_h):
-                for j in np.range(out_w):
+    for n in np.arange(N):
+        for c in np.arange(C):
+            for i in np.arange(out_h):
+                for j in np.arange(out_w):
                     # 找到最大值的那个元素坐标，将梯度传给这个坐标
                     flat_idx = np.argmax(padding_z[n, c,
                                                    strides[0] * i:strides[0] * i + pooling[0],
                                                    strides[1] * j:strides[1] * j + pooling[1]])
-                    h_idx = strides[0] * i + flat_idx // out_w
-                    w_idx = strides[1] * j + flat_idx % out_w
+                    h_idx = strides[0] * i + flat_idx // pooling[0]
+                    w_idx = strides[1] * j + flat_idx % pooling[0]
                     padding_dz[n, c, h_idx, w_idx] += next_dz[n, c, i, j]
     # 返回时剔除零填充
-    return padding_z[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
+    return _remove_padding(padding_dz, padding) # padding_z[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
 
 
 def avg_pooling_forward(z, pooling, strides=(2, 2), padding=(0, 0)):
@@ -214,12 +231,12 @@ def avg_pooling_forward(z, pooling, strides=(2, 2), padding=(0, 0)):
     out_h = (H + 2 * padding[0] - pooling[0]) // strides[0] + 1
     out_w = (W + 2 * padding[1] - pooling[1]) // strides[1] + 1
 
-    pool_z = np.zeros_like((N, C, out_h, out_w))
+    pool_z = np.zeros((N, C, out_h, out_w))
 
-    for n in np.range(N):
-        for c in np.range(C):
-            for i in np.range(out_h):
-                for j in np.range(out_w):
+    for n in np.arange(N):
+        for c in np.arange(C):
+            for i in np.arange(out_h):
+                for j in np.arange(out_w):
                     pool_z[n, c, i, j] = np.mean(padding_z[n, c,
                                                            strides[0] * i:strides[0] * i + pooling[0],
                                                            strides[1] * j:strides[1] * j + pooling[1]])
@@ -242,18 +259,18 @@ def avg_pooling_backward(next_dz, z, pooling, strides=(2, 2), padding=(0, 0)):
     padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]), (padding[1], padding[1])), 'constant',
                            constant_values=0)
     # 零填充后的梯度
-    padding_dz = np.zeros((N, C, H + 2 * padding[0], W + 2 * padding))
+    padding_dz = np.zeros_like(padding_z)
 
-    for n in np.range(N):
-        for c in np.range(C):
-            for i in np.range(out_h):
-                for j in np.range(out_w):
+    for n in np.arange(N):
+        for c in np.arange(C):
+            for i in np.arange(out_h):
+                for j in np.arange(out_w):
                     # 每个神经元均分梯度
                     padding_dz[n, c,
                                strides[0] * i:strides[0] * i + pooling[0],
                                strides[1] * j:strides[1] * j + pooling[1]] += next_dz[n, c, i, j] / (pooling[0] * pooling[1])
     # 返回时剔除零填充
-    return padding_z[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
+    return _remove_padding(padding_dz,padding)# padding_z[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
 
 
 def global_max_pooling_forward(z):
@@ -274,8 +291,8 @@ def global_max_pooling_forward(next_dz, z):
     """
     N, C, H, W = z.shape
     dz = np.zeros_like(z)
-    for n in np.range(N):
-        for c in np.range(C):
+    for n in np.arange(N):
+        for c in np.arange(C):
             # 找到最大值所在坐标，梯度传给这个坐标
             idx = np.argmax(z[n, c, :, :])
             h_idx = idx // W
@@ -302,8 +319,8 @@ def global_avg_pooling_backward(next_dz, z):
     """
     N, C, H, W = z.shape
     dz = np.zeros_like(z)
-    for n in np.range(N):
-        for c in np.range(C):
+    for n in np.arange(N):
+        for c in np.arange(C):
             # 梯度平分给相关神经元
             dz[n, c, :, :] += next_dz[n, c] / (H * W)
     return dz
