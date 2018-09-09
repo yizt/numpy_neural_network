@@ -57,19 +57,19 @@ def _single_channel_conv(z, K, b=0, padding=(0, 0), strides=(1, 1)):
     return conv_z + b
 
 
-def _remove_padding(z, paddings):
+def _remove_padding(z, padding):
     """
     移除padding
     :param z: (N,C,H,W)
     :param paddings: (p1,p2)
     :return:
     """
-    if paddings[0] > 0 and paddings[1] > 0:
-        return z[:, :, paddings[0]:-paddings[0], paddings[1]:-paddings[1]]
-    elif paddings[0] > 0:
-        return z[:, :, paddings[0]:-paddings[0], :]
-    elif paddings[1] > 0:
-        return z[:, :, :, paddings[1]:-paddings[1]]
+    if padding[0] > 0 and padding[1] > 0:
+        return z[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
+    elif padding[0] > 0:
+        return z[:, :, padding[0]:-padding[0], :]
+    elif padding[1] > 0:
+        return z[:, :, :, padding[1]:-padding[1]]
     else:
         return z
 
@@ -128,22 +128,21 @@ def conv_backward(next_dz, K, z, padding=(0, 0), strides=(1, 1)):
     """
     N = z.shape[0]
     C, D, k1, k2 = K.shape
+
+    # 卷积核梯度
     dK = np.zeros((C, D, k1, k2))
     padding_next_dz = _insert_zeros(next_dz, strides)
-    for n in np.arange(N):
-        for c in np.arange(C):
-            for d in np.arange(D):
-                dK[c, d] += _single_channel_conv(z[n, c], padding_next_dz[n, d])
-    db = np.sum(np.sum(np.sum(next_dz, axis=-1), axis=-1), axis=0)  # 在高度、宽度上相加；批量大小上相加
 
     # 卷积核高度和宽度翻转180度
     flip_K = np.flip(K, (2, 3))
-    padding_next_dz = np.lib.pad(padding_next_dz, ((0, 0), (0, 0), (k1 - 1, k1 - 1), (k2 - 1, k2 - 1)), 'constant', constant_values=0)
+    ppadding_next_dz = np.lib.pad(padding_next_dz, ((0, 0), (0, 0), (k1 - 1, k1 - 1), (k2 - 1, k2 - 1)), 'constant', constant_values=0)
     dz = np.zeros_like(z)
     for n in np.arange(N):
         for c in np.arange(C):
             for d in np.arange(D):
-                dz[n, c] += _single_channel_conv(padding_next_dz[n, d], flip_K[c, d])
+                dK[c, d] += _single_channel_conv(z[n, c], padding_next_dz[n, d])
+                dz[n, c] += _single_channel_conv(ppadding_next_dz[n, d], flip_K[c, d])
+    db = np.sum(np.sum(np.sum(next_dz, axis=-1), axis=-1), axis=0)  # 在高度、宽度上相加；批量大小上相加
 
     # 把padding减掉
     dz = _remove_padding(dz, padding)  # dz[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
