@@ -189,8 +189,8 @@ def max_pooling_backward(next_dz, z, pooling, strides=(2, 2), padding=(0, 0)):
                     flat_idx = np.argmax(padding_z[n, c,
                                                    strides[0] * i:strides[0] * i + pooling[0],
                                                    strides[1] * j:strides[1] * j + pooling[1]])
-                    h_idx = flat_idx // out_w
-                    w_idx = flat_idx % out_w
+                    h_idx = strides[0] * i + flat_idx // out_w
+                    w_idx = strides[1] * j + flat_idx % out_w
                     padding_dz[n, c, h_idx, w_idx] += next_dz[n, c, i, j]
     # 返回时剔除零填充
     return padding_z[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
