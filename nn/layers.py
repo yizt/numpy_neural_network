@@ -7,6 +7,9 @@ Created on 2018/8/19 15:03
 定义网络层
 """
 import numpy as np
+import pyximport
+pyximport.install()
+from nn.clayers import conv_forward
 
 
 def fc_forward(z, W, b):
@@ -74,7 +77,7 @@ def _remove_padding(z, padding):
         return z
 
 
-def conv_forward(z, K, b, padding=(0, 0), strides=(1, 1)):
+def conv_forward_bak(z, K, b, padding=(0, 0), strides=(1, 1)):
     """
     多通道卷积前向过程
     :param z: 卷积层矩阵,形状(N,C,H,W)，N为batch_size，C为通道数
@@ -135,13 +138,17 @@ def conv_backward(next_dz, K, z, padding=(0, 0), strides=(1, 1)):
 
     # 卷积核高度和宽度翻转180度
     flip_K = np.flip(K, (2, 3))
+    # 交换C,D为D,C；D变为输入通道数了，C变为输出通道数了
+    swap_flip_K = np.swapaxes(flip_K, 0, 1)
+    # 增加高度和宽度0填充
     ppadding_next_dz = np.lib.pad(padding_next_dz, ((0, 0), (0, 0), (k1 - 1, k1 - 1), (k2 - 1, k2 - 1)), 'constant', constant_values=0)
-    dz = np.zeros((N, C, H + 2 * padding[0], W + 2 * padding[1]))
-    for n in np.arange(N):
-        for c in np.arange(C):
-            for d in np.arange(D):
-                dK[c, d] += _single_channel_conv(z[n, c], padding_next_dz[n, d])
-                dz[n, c] += _single_channel_conv(ppadding_next_dz[n, d], flip_K[c, d])
+    dz = conv_forward(ppadding_next_dz.astype(np.float64), swap_flip_K.astype(np.float64), np.zeros((C,), dtype=np.float64))
+
+    # 求卷积和的梯度dK
+    swap_z = np.swapaxes(z, 0, 1)  # 变为(C,N,H,W)与
+    dK = conv_forward(swap_z.astype(np.float64), padding_next_dz.astype(np.float64), np.zeros((D,), dtype=np.float64))
+
+    # 偏置的梯度
     db = np.sum(np.sum(np.sum(next_dz, axis=-1), axis=-1), axis=0)  # 在高度、宽度上相加；批量大小上相加
 
     # 把padding减掉
@@ -345,12 +352,12 @@ def flatten_backward(next_dz, z):
     return np.reshape(next_dz, z.shape)
 
 
-if __name__ == "__main__":
+def main():
     z = np.ones((5, 5))
     k = np.ones((3, 3))
     b = 3
-    #print(_single_channel_conv(z, k,padding=(1,1)))
-    #print(_single_channel_conv(z, k, strides=(2, 2)))
+    # print(_single_channel_conv(z, k,padding=(1,1)))
+    # print(_single_channel_conv(z, k, strides=(2, 2)))
     assert _single_channel_conv(z, k).shape == (3, 3)
     assert _single_channel_conv(z, k, padding=(1, 1)).shape == (5, 5)
     assert _single_channel_conv(z, k, strides=(2, 2)).shape == (2, 2)
@@ -372,3 +379,7 @@ if __name__ == "__main__":
     print(conv_forward(z, k, b)[0, 0])
 
     print(np.argmax(np.array([[1, 2], [3, 4]])))
+
+
+if __name__ == "__main__":
+    main()
