@@ -14,23 +14,54 @@
 
 [TOC]
 
+## 运行工程
+
+环境：python 3.6.x
+
+依赖：numpy>=1.15.0、Cython、jupyter
+
+a) 下载
+
+```shell
+git clone https://github.com/yizt/numpy_neuron_network
+```
+
+
+
+b) 编译nn/clayers.pyx
+
+```shell
+cd numpy_neuron_network
+python setup.py build_ext -i
+```
+
+c) 启动工程
+
+```shell
+jupyter notebook --allow-root --ip 0.0.0.0
+```
+
+
+
+
+
 ## 基础知识
 
-[0_1-全连接层、损失函数的反向传播](0_1-全连接层、损失函数的反向传播.md)
+[0_1-全连接层、损失函数的反向传播](0_1-全连接层、损失函数的反向传播.md) 、[csdn地址](https://blog.csdn.net/csuyzt/article/details/81839388)
 
-[0_2_1-卷积层的反向传播-单通道、无padding、步长1](0_2_1-卷积层的反向传播-单通道、无padding、步长1.md)
+[0_2_1-卷积层的反向传播-单通道、无padding、步长1](0_2_1-卷积层的反向传播-单通道、无padding、步长1.md) 、[csdn地址](https://blog.csdn.net/csuyzt/article/details/81952377)
 
-[0_2_2-卷积层的反向传播-多通道、无padding、步长1](0_2_2-卷积层的反向传播-多通道、无padding、步长1.md)
+[0_2_2-卷积层的反向传播-多通道、无padding、步长1](0_2_2-卷积层的反向传播-多通道、无padding、步长1.md) 、[csdn地址](https://blog.csdn.net/csuyzt/article/details/82026408)
 
-[0_2_3-卷积层的反向传播-多通道、无padding、步长不为1](0_2_3-卷积层的反向传播-多通道、无padding、步长不为1.md)
+[0_2_3-卷积层的反向传播-多通道、无padding、步长不为1](0_2_3-卷积层的反向传播-多通道、无padding、步长不为1.md) 、[csdn地址](https://blog.csdn.net/csuyzt/article/details/82120173)
 
-[0_2_4-卷积层的反向传播-多通道、有padding、步长不为1](0_2_4-卷积层的反向传播-多通道、有padding、步长不为1.md)
+[0_2_4-卷积层的反向传播-多通道、有padding、步长不为1](0_2_4-卷积层的反向传播-多通道、有padding、步长不为1.md) 、[csdn地址](https://blog.csdn.net/csuyzt/article/details/82632918)
 
-[0_2_5-池化层的反向传播-MaxPooling、AveragePooling、GlobalAveragePooling、GlobalMaxPooling](0_2_5-池化层的反向传播-MaxPooling、AveragePooling、GlobalAveragePooling.md)
+[0_2_5-池化层的反向传播-MaxPooling、AveragePooling、GlobalAveragePooling、GlobalMaxPooling](0_2_5-池化层的反向传播-MaxPooling、AveragePooling、GlobalAveragePooling.md) 、[csdn地址](https://blog.csdn.net/csuyzt/article/details/82633051)
 
-[0_3-激活函数的反向传播-ReLU、LeakyReLU、PReLU、ELU、SELU](0_3-激活函数的反向传播-ReLU、LeakyReLU、PReLU、ELU、SELU.md)
+[0_3-激活函数的反向传播-ReLU、LeakyReLU、PReLU、ELU、SELU](0_3-激活函数的反向传播-ReLU、LeakyReLU、PReLU、ELU、SELU.md) 、[csdn地址](https://blog.csdn.net/csuyzt/article/details/82320589)
 
-[0_4-优化方法-SGD、AdaGrad、RMSProp、Adadelta、Adam](0_4-优化方法-SGD、AdaGrad、RMSProp、Adadelta、Adam.md)
+[0_4-优化方法-SGD、AdaGrad、RMSProp、Adadelta、Adam](0_4-优化方法-SGD、AdaGrad、RMSProp、Adadelta、Adam.md) 、[csdn地址](https://blog.csdn.net/csuyzt/article/details/82633173)
 
 
 
@@ -38,9 +69,9 @@
 
 ## DNN练习
 
-[1_1_1-全连接神经网络做线性回归](1_1_1-全连接神经网络做线性回归.md)
+[1_1_1-全连接神经网络做线性回归](1_1_1-全连接神经网络做线性回归.md) 、[csdn地址](https://blog.csdn.net/csuyzt/article/details/81841817)
 
-[1_1_2-全连接神经网络做mnist手写数字识别](1_1_2-全连接神经网络做mnist手写数字识别.md)
+[1_1_2-全连接神经网络做mnist手写数字识别](1_1_2-全连接神经网络做mnist手写数字识别.md) 、[csdn地址](https://blog.csdn.net/csuyzt/article/details/82320663)
 
 
 
