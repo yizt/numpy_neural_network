@@ -28,10 +28,10 @@ class SGD(object):
 
         :param weights: 权重，字典类型
         :param lr: 初始学习率
-        :param momentum: 动量
+        :param momentum: 动量因子
         :param decay: 学习率衰减
         """
-        self.v = _copy_weights_to_zeros(weights)
+        self.v = _copy_weights_to_zeros(weights)  # 累积动量大小
         self.iterations = 0  # 迭代次数
         self.lr = self.init_lr = lr
         self.momentum = momentum
@@ -46,6 +46,7 @@ class SGD(object):
         """
         # 更新学习率
         self.lr = self.init_lr / (1 + self.iterations * self.decay)
+
         # 更新动量和梯度
         for key in self.v.keys():
             self.v[key] = self.momentum * self.v[key] + self.lr * gradients[key]
@@ -53,9 +54,6 @@ class SGD(object):
 
         # 更新迭代次数
         self.iterations += 1
-
-        # 返回更新后的权重
-        return weights
 
 
 class AdaGrad(object):
@@ -90,9 +88,6 @@ class AdaGrad(object):
 
         # 更新迭代次数
         self.iterations += 1
-
-        # 返回梯度
-        return weights
 
 
 class RmsProp(object):
@@ -129,6 +124,3 @@ class RmsProp(object):
 
         # 更新迭代次数
         self.iterations += 1
-
-        # 返回梯度
-        return weights
