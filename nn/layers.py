@@ -110,12 +110,14 @@ def _insert_zeros(dz, strides):
     """
     _, _, H, W = dz.shape
     pz = dz
-    for h in np.arange(H - 1, 0, -1):
-        for o in np.arange(strides[0] - 1):
-            pz = np.insert(pz, h, 0, axis=2)
-    for w in np.arange(W - 1, 0, -1):
-        for o in np.arange(strides[1] - 1):
-            pz = np.insert(pz, w, 0, axis=3)
+    if strides[0] > 1:
+        for h in np.arange(H - 1, 0, -1):
+            for o in np.arange(strides[0] - 1):
+                pz = np.insert(pz, h, 0, axis=2)
+    if strides[1] > 1:
+        for w in np.arange(W - 1, 0, -1):
+            for o in np.arange(strides[1] - 1):
+                pz = np.insert(pz, w, 0, axis=3)
     return pz
 
 
@@ -133,7 +135,7 @@ def conv_backward(next_dz, K, z, padding=(0, 0), strides=(1, 1)):
     C, D, k1, k2 = K.shape
 
     # 卷积核梯度
-    dK = np.zeros((C, D, k1, k2))
+    # dK = np.zeros((C, D, k1, k2))
     padding_next_dz = _insert_zeros(next_dz, strides)
 
     # 卷积核高度和宽度翻转180度
@@ -157,7 +159,7 @@ def conv_backward(next_dz, K, z, padding=(0, 0), strides=(1, 1)):
     return dK / N, db / N, dz
 
 
-def max_pooling_forward(z, pooling, strides=(2, 2), padding=(0, 0)):
+def max_pooling_forward_bak(z, pooling, strides=(2, 2), padding=(0, 0)):
     """
     最大池化前向过程
     :param z: 卷积层矩阵,形状(N,C,H,W)，N为batch_size，C为通道数
@@ -186,7 +188,7 @@ def max_pooling_forward(z, pooling, strides=(2, 2), padding=(0, 0)):
     return pool_z
 
 
-def max_pooling_backward(next_dz, z, pooling, strides=(2, 2), padding=(0, 0)):
+def max_pooling_backward_bak(next_dz, z, pooling, strides=(2, 2), padding=(0, 0)):
     """
     最大池化反向过程
     :param next_dz：损失函数关于最大池化输出的损失
@@ -212,8 +214,8 @@ def max_pooling_backward(next_dz, z, pooling, strides=(2, 2), padding=(0, 0)):
                     flat_idx = np.argmax(padding_z[n, c,
                                                    strides[0] * i:strides[0] * i + pooling[0],
                                                    strides[1] * j:strides[1] * j + pooling[1]])
-                    h_idx = strides[0] * i + flat_idx // pooling[0]
-                    w_idx = strides[1] * j + flat_idx % pooling[0]
+                    h_idx = strides[0] * i + flat_idx // pooling[1]
+                    w_idx = strides[1] * j + flat_idx % pooling[1]
                     padding_dz[n, c, h_idx, w_idx] += next_dz[n, c, i, j]
     # 返回时剔除零填充
     return _remove_padding(padding_dz, padding)  # padding_z[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
@@ -380,6 +382,61 @@ def main():
 
     print(np.argmax(np.array([[1, 2], [3, 4]])))
 
+
+def test_conv():
+    # 测试卷积
+    z = np.random.randn(3, 3, 28, 28).astype(np.float64)
+    K = np.random.randn(3, 4, 3, 3).astype(np.float64) * 1e-3
+    b = np.zeros(4).astype(np.float64)
+
+    next_z = conv_forward(z, K, b)
+    y_true = np.ones_like(next_z)
+
+    from nn.losses import mean_squared_loss
+    for i in range(10000):
+        # 前向
+        next_z = conv_forward(z, K, b)
+        # 反向
+        loss, dy = mean_squared_loss(next_z, y_true)
+        dK, db, _ = conv_backward(dy, K, z)
+        K -= 0.001 * dK
+        b -= 0.001 * db
+
+        if i % 10 == 0:
+            print("i:{},loss:{},mindy:{},maxdy:{}".format(i, loss, np.mean(dy), np.max(dy)))
+
+        if np.allclose(y_true, next_z):
+            print("yes")
+            break
+
+def test_conv_and_max_pooling():
+    # 测试卷积和最大池化
+    z = np.random.randn(3, 3, 28, 28).astype(np.float64)
+    K = np.random.randn(3, 4, 3, 3).astype(np.float64) * 1e-3
+    b = np.zeros(4).astype(np.float64)
+
+    next_z = conv_forward(z, K, b)
+    y_pred = max_pooling_forward_bak(next_z,pooling=(2,2))
+    y_true = np.ones_like(y_pred)
+
+    from nn.losses import mean_squared_loss
+    for i in range(10000):
+        # 前向
+        next_z = conv_forward(z, K, b)
+        y_pred = max_pooling_forward_bak(next_z, pooling=(2, 2))
+        # 反向
+        loss, dy = mean_squared_loss(y_pred, y_true)
+        next_dz = max_pooling_backward_bak(dy,next_z,pooling=(2,2))
+        dK, db, _ = conv_backward(next_dz, K, z)
+        K -= 0.001 * dK
+        b -= 0.001 * db
+
+        if i % 10 == 0:
+            print("i:{},loss:{},mindy:{},maxdy:{}".format(i, loss, np.mean(dy), np.max(dy)))
+
+        if np.allclose(y_true, y_pred):
+            print("yes")
+            break
 
 if __name__ == "__main__":
     main()
