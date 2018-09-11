@@ -61,6 +61,9 @@ $$
 w = w - \frac {\eta_t} {\sqrt{s_t + \epsilon }} \cdot \nabla_w  \tag 5
 $$
 
+​                
+
+​                                                                              未完待续... ...
 
 ## 参考
 
