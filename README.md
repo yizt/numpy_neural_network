@@ -1,5 +1,5 @@
 # numpy_neuron_network
-仅使用numpy从头构建神经网络, 包括如下内容(更新中....)
+仅使用numpy从头构建神经网络, 包括如下内容(持续更新中....)
 
 0. 网络中梯度反向传播公式推导
 
@@ -35,7 +35,7 @@ cd numpy_neuron_network
 python setup.py build_ext -i
 ```
 
-c) 启动工程
+c) 启动工程,所有的notebook都可以直接运行
 
 ```shell
 jupyter notebook --allow-root --ip 0.0.0.0
@@ -77,13 +77,13 @@ jupyter notebook --allow-root --ip 0.0.0.0
 
 ## CNN练习
 
-2_1-卷积层实现
+[2_1-numpy卷积层实现](2_1-numpy卷积层实现.md) 、[csdn地址](https://blog.csdn.net/csuyzt/article/details/82668153)
 
-2_2-池化层实现
+[2_2-numpy池化层实现]() 、[csdn地址](https://blog.csdn.net/csuyzt/article/details/82668941)
 
-2_3-CNN-mnist手写数字识别
+[2_3-numpy-cnn-mnist手写数字识别](2_3-numpy-cnn-mnist手写数字识别.md) 、[csdn地址](https://blog.csdn.net/csuyzt/article/details/82669885)
 
-2_4-对抗神经网络
+2_4-对抗神经网络 、[csdn地址]()
 
 
 
