@@ -12,8 +12,6 @@ import numpy as np
 cimport numpy as np
 
 
-@cython.boundscheck(False) # turn off bounds-checking for entire function
-@cython.wraparound(False)  # turn off negative index wrapping for entire function
 cpdef conv_forward(np.ndarray[double, ndim=4] z,
                    np.ndarray[double, ndim=4] K,
                    np.ndarray[double, ndim=1] b,
@@ -73,7 +71,7 @@ def _remove_padding(np.ndarray[double, ndim=4] z, tuple padding):
         return z
 
 
-def max_pooling_forward(np.ndarray[double, ndim=4] z,
+cpdef max_pooling_forward(np.ndarray[double, ndim=4] z,
                         tuple pooling,
                         tuple strides=(2, 2),
                         tuple padding=(0, 0)):
@@ -111,7 +109,7 @@ def max_pooling_forward(np.ndarray[double, ndim=4] z,
     return pool_z
 
 
-def max_pooling_backward(np.ndarray[double, ndim=4] next_dz,
+cpdef max_pooling_backward(np.ndarray[double, ndim=4] next_dz,
                          np.ndarray[double, ndim=4] z,
                          tuple pooling,
                          tuple strides=(2, 2),
