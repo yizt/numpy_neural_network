@@ -4,7 +4,7 @@ Created on 2018/8/31 20:33
 
 @author: mick.yi
 激活层
-
+参考：https://blog.csdn.net/csuyzt/article/details/82320589 中的推导公式
 """
 import numpy as np
 
@@ -33,6 +33,7 @@ def lrelu_forward(z, alpha=0.1):
     """
     leaky relu前向传播
     :param z: 待激活层
+    :param alpha: 常量因子
     :return: 激活后的结果
     """
     return np.where(np.greater(z, 0), z, alpha * z)
@@ -43,6 +44,7 @@ def lrelu_backward(next_dz, z, alpha=0.1):
     leaky relu反向传播
     :param next_dz: 激活后的梯度
     :param z: 激活前的值
+    :param alpha: 常量因子
     :return:
     """
     dz = np.where(np.greater(z, 0), next_dz, alpha * next_dz)
@@ -70,3 +72,24 @@ def prelu_backwark(next_dz, z, alpha):
     dz = np.where(np.greater(z, 0), next_dz, alpha * next_dz)
     dalpha = np.where(np.greater(z, 0), 0, z * next_dz)
     return dalpha, dz
+
+
+def elu_forward(z, alpha=0.1):
+    """
+    elu前向传播
+    :param z: 输入
+    :param alpha: 常量因子
+    :return:
+    """
+    return np.where(np.greater(z, 0), z, alpha * (np.exp(z) - 1))
+
+
+def elu_backward(next_dz, z, alpha=0.1):
+    """
+    elu反向传播
+    :param next_dz: 输出层梯度
+    :param z: 输入
+    :param alpha: 常量因子
+    :return:
+    """
+    return np.where(np.greater(z, 0), next_dz, alpha * next_dz * np.exp(z))
