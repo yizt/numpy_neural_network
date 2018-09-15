@@ -47,3 +47,26 @@ def lrelu_backward(next_dz, z, alpha=0.1):
     """
     dz = np.where(np.greater(z, 0), next_dz, alpha * next_dz)
     return dz
+
+
+def prelu_forward(z, alpha):
+    """
+    PReLu 前向传播
+    :param z: 输入
+    :param alpha:需要学习的参数
+    :return:
+    """
+    return np.where(np.greater(z, 0), z, alpha * z)
+
+
+def prelu_backwark(next_dz, z, alpha):
+    """
+    PReLu 后向传播
+    :param next_dz: 输出层的梯度
+    :param z: 输入
+    :param alpha:需要学习的参数
+    :return:
+    """
+    dz = np.where(np.greater(z, 0), next_dz, alpha * next_dz)
+    dalpha = np.where(np.greater(z, 0), 0, z * next_dz)
+    return dalpha, dz
