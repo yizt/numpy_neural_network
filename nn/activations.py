@@ -9,6 +9,41 @@ Created on 2018/8/31 20:33
 import numpy as np
 
 
+def sigmoid_forward(z):
+    """
+    sigmoid激活前向过程
+    :param z:
+    :return:
+    """
+    return 1/(1+np.exp(-z))
+
+
+def sigmoid_backward(next_dz):
+    """
+    sigmoid激活反向过程
+    :param next_dz:
+    :return:
+    """
+    return sigmoid_forward(1-sigmoid_forward(next_dz))
+
+def tanh_forward(z):
+    """
+    tanh激活前向过程
+    :param z:
+    :return:
+    """
+    return np.tanh(z)
+
+
+def tanh_backward(next_dz):
+    """
+    tanh激活反向过程
+    :param next_dz:
+    :return:
+    """
+    return 1 - np.square(np.tanh(next_dz))
+
+
 def relu_forward(z):
     """
     relu前向传播
