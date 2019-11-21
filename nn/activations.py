@@ -15,16 +15,18 @@ def sigmoid_forward(z):
     :param z:
     :return:
     """
-    return 1/(1+np.exp(-z))
+    return 1 / (1 + np.exp(-z))
 
 
-def sigmoid_backward(next_dz):
+def sigmoid_backward(next_dz, z):
     """
     sigmoid激活反向过程
     :param next_dz:
+    :param z:
     :return:
     """
-    return sigmoid_forward(1-sigmoid_forward(next_dz))
+    return sigmoid_forward(z) * (1 - sigmoid_forward(z)) * next_dz
+
 
 def tanh_forward(z):
     """

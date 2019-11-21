@@ -45,7 +45,6 @@ $$
 \end{align}
 $$
 
-
 ## LeakyReLU
 
 ​           ReLU在取值小于零部分没有梯度，LeakyReLU在取值小于0部分给一个很小的梯度
@@ -166,5 +165,29 @@ $$
 \delta^{l+1}    & z^l>0 \\
 \alpha \delta^{l+1} \exp(z^l)    & z^l<=0    \tag {11}
 \end{cases}
+\end{align}
+$$
+
+
+
+
+
+## Sigmoid
+
+### 前向过程
+
+$$
+Sigmoid(z)=\frac 1 {1+\exp(-z)}    \tag {12}
+$$
+
+### 后向过程
+
+
+$$
+\begin{align} \delta^l &= \frac {\partial L} {\partial z^l} \\
+&=\frac {\partial L} {\partial z^{l+1}} \frac {\partial z^{l+1}} {\partial z^l} \\
+&=\delta^{l+1} (-1) (1+exp(-z))^{-2}exp(-z)(-1) \\
+&=\delta^{l+1} \frac {exp(-z)} {(1+exp(-z))^2} \\
+&=\delta^{l+1} Sigmoid(z) (1-Sigmoid(z))      \tag {13}
 \end{align}
 $$
