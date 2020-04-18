@@ -233,6 +233,35 @@ class MaxPooling2D(BaseModule):
         return out_gradient
 
 
+class GlobalAvgPooling2D(BaseModule):
+    """
+    全局平均池化
+    """
+
+    def __init__(self, **kwargs):
+        super(GlobalAvgPooling2D, self).__init__(**kwargs)
+
+    def forward(self, x):
+        """
+
+        :param x: [B,C,H,W]
+        :return output : [B,C,H',W']
+        """
+        self.in_features = x
+        output = global_avg_pooling_forward(x)
+        return output
+
+    def backward(self, in_gradient):
+        """
+
+        :param in_gradient: 后一层传递过来的梯度
+        :return out_gradient: 传递给前一层的梯度
+        """
+        out_gradient = global_avg_pooling_backward(in_gradient,
+                                                   self.in_features)
+        return out_gradient
+
+
 class Flatten(BaseModule):
     """
     打平层
