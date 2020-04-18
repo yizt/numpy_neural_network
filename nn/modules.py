@@ -7,7 +7,6 @@
 """
 from typing import List
 
-import numpy as np
 import pyximport
 from activations import *
 from layers import *
@@ -166,6 +165,24 @@ class Conv2D(BaseModule):
     def update_gradient(self, lr):
         self.weight -= self.g_weight * lr
         self.bias -= self.g_bias * lr
+
+
+class ReLU(BaseModule):
+    def __init__(self, **kwargs):
+        super(ReLU, self).__init__(**kwargs)
+
+    def forward(self, x):
+        self.in_features = x
+        return relu_forward(x)
+
+    def backward(self, in_gradient):
+        """
+
+        :param in_gradient: 后一层传递过来的梯度
+        :return out_gradient: 传递给前一层的梯度
+        """
+        out_gradient = relu_backward(in_gradient, self.in_features)
+        return out_gradient
 
 
 def test_linear():
