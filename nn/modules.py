@@ -43,8 +43,13 @@ class Model(BaseModule):
     网络模型
     """
 
-    def __init__(self, layers: List[BaseModule]):
+    def __init__(self, layers: List[BaseModule], **kwargs):
+        super(Model, self).__init__(**kwargs)
         self.layers = layers
+        # 收集所有权重和梯度
+        for l in self.layers:
+            self.weights.update(l.weights)
+            self.gradients.update(l.gradients)
 
     def forward(self, x):
         for l in self.layers:
