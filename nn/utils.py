@@ -5,6 +5,8 @@ Created on 2018/9/2 9:30
 @author: mick.yi
 工具类
 """
+import pickle
+
 import numpy as np
 
 
@@ -36,3 +38,26 @@ def to_categorical(y, num_classes=None):
     output_shape = input_shape + (num_classes,)
     categorical = np.reshape(categorical, output_shape)
     return categorical
+
+
+def save_weights(file_path, weights):
+    """
+    保存权重
+    :param file_path:
+    :param weights:
+    :return:
+    """
+    f = open(file_path, 'wb')
+    pickle.dump(weights, f)
+    f.close()
+
+
+def load_weights(file_path):
+    """
+    加载权重
+    :param file_path:
+    :return:
+    """
+    f = open(file_path, 'rb')
+    weights = pickle.load(f)
+    return weights
