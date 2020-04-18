@@ -7,6 +7,7 @@
 """
 from typing import List
 
+import numpy as np
 import pyximport
 from activations import *
 from layers import *
@@ -186,6 +187,10 @@ class ReLU(BaseModule):
 
 
 class MaxPooling2D(BaseModule):
+    """
+    最大池化层
+    """
+
     def __init__(self, kernel=(2, 2), stride=(2, 2), padding=(0, 0), **kwargs):
         """
 
@@ -220,6 +225,28 @@ class MaxPooling2D(BaseModule):
                                             self.kernel,
                                             self.stride,
                                             self.padding)
+        return out_gradient
+
+
+class Flatten(BaseModule):
+    """
+    打平层
+    """
+
+    def __init__(self, **kwargs):
+        super(Flatten, self).__init__(**kwargs)
+
+    def forward(self, x):
+        self.in_features = x
+        return flatten_forward(x)
+
+    def backward(self, in_gradient):
+        """
+
+        :param in_gradient: 后一层传递过来的梯度
+        :return out_gradient: 传递给前一层的梯度
+        """
+        out_gradient = flatten_backward(in_gradient, self.in_features)
         return out_gradient
 
 
