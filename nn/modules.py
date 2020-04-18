@@ -7,8 +7,6 @@
 """
 from typing import List
 
-import numpy as np
-import pyximport
 from activations import *
 from layers import *
 from losses import *
@@ -54,11 +52,12 @@ class Model(BaseModule):
     def forward(self, x):
         for l in self.layers:
             x = l.forward(x)
-
+        # 网络结果返回
         return x
 
     def backward(self, in_gradient):
-        for l in self.layers:
+        # 反向传播
+        for l in self.layers[::-1]:
             in_gradient = l.backward(in_gradient)
 
     def update_gradient(self, lr):
@@ -257,8 +256,10 @@ class GlobalAvgPooling2D(BaseModule):
         :param in_gradient: 后一层传递过来的梯度
         :return out_gradient: 传递给前一层的梯度
         """
+        print("in_gradient:{}".format(in_gradient.shape))
         out_gradient = global_avg_pooling_backward(in_gradient,
                                                    self.in_features)
+        print("out_gradient:{}".format(out_gradient.shape))
         return out_gradient
 
 
