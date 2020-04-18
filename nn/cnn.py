@@ -14,7 +14,7 @@ from six.moves import cPickle
 
 from losses import cross_entropy_loss
 from optimizers import SGD
-from utils import to_categorical
+from utils import to_categorical, save_weights
 from vgg import VGG
 
 
@@ -105,6 +105,11 @@ def main(args):
         print('{} step:{},loss:{}'.format(time.asctime(time.localtime(time.time())),
                                           step, loss))
 
+        # 保存权重
+        if step % 100 == 0:
+            save_weights(os.path.join(args.save_dir, 'weights-{:03d}.pkl'.format(step)),
+                         vgg.weights)
+
 
 def test(path):
     (x_train, y_train), (x_test, y_test) = load_cifar(path)
@@ -125,6 +130,7 @@ if __name__ == '__main__':
     parse = argparse.ArgumentParser()
     parse.add_argument('-d', '--cifar-root', type=str,
                        default='/Users/yizuotian/dataset/cifar-10-batches-py')
+    parse.add_argument('-o', '--save-dir', type=str, default='/tmp')
     parse.add_argument('-b', '--batch-size', type=int, default=8)
     parse.add_argument('-s', '--steps', type=int, default=10000)
     arguments = parse.parse_args()
