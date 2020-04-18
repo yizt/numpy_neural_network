@@ -12,9 +12,9 @@ import numpy as np
 cimport numpy as np
 
 
-cpdef conv_forward(np.ndarray[double, ndim=4] z,
-                   np.ndarray[double, ndim=4] K,
-                   np.ndarray[double, ndim=1] b,
+cpdef conv_forward(np.ndarray[float, ndim=4] z,
+                   np.ndarray[float, ndim=4] K,
+                   np.ndarray[float, ndim=1] b,
                    tuple padding=(0, 0),
                    tuple strides=(1, 1)):
     """
@@ -26,7 +26,7 @@ cpdef conv_forward(np.ndarray[double, ndim=4] z,
     :param strides: 步长
     :return: 卷积结果
     """
-    cdef np.ndarray[double, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]),
+    cdef np.ndarray[float, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]),
                                                                  (padding[1], padding[1])), 'constant', constant_values=0)
     cdef unsigned int N = padding_z.shape[0]
     cdef unsigned int height = padding_z.shape[2]
@@ -42,7 +42,7 @@ cpdef conv_forward(np.ndarray[double, ndim=4] z,
 
     assert (height - k1) % s0 == 0, '步长不为1时，步长必须刚好能够被整除'
     assert (width - k2) % s1 == 0, '步长不为1时，步长必须刚好能够被整除'
-    cdef np.ndarray[double, ndim= 4] conv_z = np.zeros((N, D, 1 + (height - k1) // s0, 1 + (width - k2) // s1))
+    cdef np.ndarray[float, ndim= 4] conv_z = np.zeros((N, D, 1 + (height - k1) // s0, 1 + (width - k2) // s1)).astype(np.float32)
     cdef unsigned int n, d, h, w
     for n in np.arange(N):
         for d in np.arange(D):
@@ -54,7 +54,7 @@ cpdef conv_forward(np.ndarray[double, ndim=4] z,
 
 
 
-def _remove_padding(np.ndarray[double, ndim=4] z, tuple padding):
+def _remove_padding(np.ndarray[float, ndim=4] z, tuple padding):
     """
     移除padding
     :param z: (N,C,H,W)
@@ -71,7 +71,7 @@ def _remove_padding(np.ndarray[double, ndim=4] z, tuple padding):
         return z
 
 
-cpdef max_pooling_forward(np.ndarray[double, ndim=4] z,
+cpdef max_pooling_forward(np.ndarray[float, ndim=4] z,
                         tuple pooling,
                         tuple strides=(2, 2),
                         tuple padding=(0, 0)):
@@ -88,7 +88,7 @@ cpdef max_pooling_forward(np.ndarray[double, ndim=4] z,
     cdef unsigned int H = z.shape[2]
     cdef unsigned int W = z.shape[3]
     # 零填充
-    cdef np.ndarray[double, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),
+    cdef np.ndarray[float, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),
                                                                  (padding[0], padding[0]), (padding[1], padding[1])),
                                                              'constant', constant_values=0)
 
@@ -96,7 +96,7 @@ cpdef max_pooling_forward(np.ndarray[double, ndim=4] z,
     cdef unsigned int out_h = (H + 2 * padding[0] - pooling[0]) // strides[0] + 1
     cdef unsigned int out_w = (W + 2 * padding[1] - pooling[1]) // strides[1] + 1
 
-    cdef np.ndarray[double, ndim= 4] pool_z = np.zeros((N, C, out_h, out_w)).astype(np.float64)
+    cdef np.ndarray[float, ndim= 4] pool_z = np.zeros((N, C, out_h, out_w)).astype(np.float32)
 
     cdef unsigned int n, c, i, j
     for n in np.arange(N):
@@ -109,8 +109,8 @@ cpdef max_pooling_forward(np.ndarray[double, ndim=4] z,
     return pool_z
 
 
-cpdef max_pooling_backward(np.ndarray[double, ndim=4] next_dz,
-                         np.ndarray[double, ndim=4] z,
+cpdef max_pooling_backward(np.ndarray[float, ndim=4] next_dz,
+                         np.ndarray[float, ndim=4] z,
                          tuple pooling,
                          tuple strides=(2, 2),
                          tuple padding=(0, 0)):
@@ -130,12 +130,12 @@ cpdef max_pooling_backward(np.ndarray[double, ndim=4] next_dz,
     cdef unsigned int out_h = next_dz.shape[2]
     cdef unsigned int out_w = next_dz.shape[3]
     # 零填充
-    cdef np.ndarray[double, ndim = 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),
+    cdef np.ndarray[float, ndim = 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),
                                                                 (padding[0], padding[0]),
                                                                 (padding[1], padding[1])),
                                                             'constant', constant_values=0)
     # 零填充后的梯度
-    cdef np.ndarray[double, ndim = 4] padding_dz = np.zeros_like(padding_z).astype(np.float64)
+    cdef np.ndarray[float, ndim = 4] padding_dz = np.zeros_like(padding_z).astype(np.float32)
 
     cdef unsigned int n, c, i, j
     for n in np.arange(N):

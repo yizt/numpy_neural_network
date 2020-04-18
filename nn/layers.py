@@ -144,11 +144,13 @@ def conv_backward(next_dz, K, z, padding=(0, 0), strides=(1, 1)):
     swap_flip_K = np.swapaxes(flip_K, 0, 1)
     # 增加高度和宽度0填充
     ppadding_next_dz = np.lib.pad(padding_next_dz, ((0, 0), (0, 0), (k1 - 1, k1 - 1), (k2 - 1, k2 - 1)), 'constant', constant_values=0)
-    dz = conv_forward(ppadding_next_dz.astype(np.float64), swap_flip_K.astype(np.float64), np.zeros((C,), dtype=np.float64))
+    dz = conv_forward(ppadding_next_dz,
+                      swap_flip_K,
+                      np.zeros((C,), dtype=np.float32))
 
     # 求卷积和的梯度dK
     swap_z = np.swapaxes(z, 0, 1)  # 变为(C,N,H,W)与
-    dK = conv_forward(swap_z.astype(np.float64), padding_next_dz.astype(np.float64), np.zeros((D,), dtype=np.float64))
+    dK = conv_forward(swap_z, padding_next_dz, np.zeros((D,), dtype=np.float32))
 
     # 偏置的梯度
     db = np.sum(np.sum(np.sum(next_dz, axis=-1), axis=-1), axis=0)  # 在高度、宽度上相加；批量大小上相加
@@ -176,7 +178,7 @@ def max_pooling_forward_bak(z, pooling, strides=(2, 2), padding=(0, 0)):
     out_h = (H + 2 * padding[0] - pooling[0]) // strides[0] + 1
     out_w = (W + 2 * padding[1] - pooling[1]) // strides[1] + 1
 
-    pool_z = np.zeros((N, C, out_h, out_w))
+    pool_z = np.zeros((N, C, out_h, out_w),dtype=np.float32)
 
     for n in np.arange(N):
         for c in np.arange(C):
@@ -239,7 +241,7 @@ def avg_pooling_forward(z, pooling, strides=(2, 2), padding=(0, 0)):
     out_h = (H + 2 * padding[0] - pooling[0]) // strides[0] + 1
     out_w = (W + 2 * padding[1] - pooling[1]) // strides[1] + 1
 
-    pool_z = np.zeros((N, C, out_h, out_w))
+    pool_z = np.zeros((N, C, out_h, out_w),dtype=np.float32)
 
     for n in np.arange(N):
         for c in np.arange(C):
@@ -385,9 +387,9 @@ def main():
 
 def test_conv():
     # 测试卷积
-    z = np.random.randn(3, 3, 28, 28).astype(np.float64)
-    K = np.random.randn(3, 4, 3, 3).astype(np.float64) * 1e-3
-    b = np.zeros(4).astype(np.float64)
+    z = np.random.randn(3, 3, 28, 28).astype(np.float)
+    K = np.random.randn(3, 4, 3, 3).astype(np.float) * 1e-3
+    b = np.zeros(4).astype(np.float)
 
     next_z = conv_forward(z, K, b)
     y_true = np.ones_like(next_z)
@@ -411,9 +413,9 @@ def test_conv():
 
 def test_conv_and_max_pooling():
     # 测试卷积和最大池化
-    z = np.random.randn(3, 3, 28, 28).astype(np.float64)
-    K = np.random.randn(3, 4, 3, 3).astype(np.float64) * 1e-3
-    b = np.zeros(4).astype(np.float64)
+    z = np.random.randn(3, 3, 28, 28).astype(np.float)
+    K = np.random.randn(3, 4, 3, 3).astype(np.float) * 1e-3
+    b = np.zeros(4).astype(np.float)
 
     next_z = conv_forward(z, K, b)
     y_pred = max_pooling_forward_bak(next_z,pooling=(2,2))
@@ -439,4 +441,5 @@ def test_conv_and_max_pooling():
             break
 
 if __name__ == "__main__":
-    main()
+    # main()
+    test_conv()
