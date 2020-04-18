@@ -52,6 +52,7 @@ class Model(BaseModule):
     def forward(self, x):
         for l in self.layers:
             x = l.forward(x)
+            # print('forward layer:{},feature:{}'.format(l.name, np.max(x)))
         # 网络结果返回
         return x
 
@@ -59,6 +60,7 @@ class Model(BaseModule):
         # 反向传播
         for l in self.layers[::-1]:
             in_gradient = l.backward(in_gradient)
+            # print('backward layer:{},gradient:{}'.format(l.name, np.max(in_gradient)))
 
     def update_gradient(self, lr):
         for l in self.layers:
@@ -77,8 +79,8 @@ class Linear(BaseModule):
         :param out_units: 输出神经元数
         """
         super(Linear, self).__init__(**kwargs)
-        self.weight = np.random.randn(in_units, out_units).astype(np.float64)
-        self.bias = np.zeros(out_units).astype(np.float64)
+        self.weight = np.random.randn(in_units, out_units).astype(np.float) * np.sqrt(2 / in_units / out_units)
+        self.bias = np.zeros(out_units).astype(np.float)
         # 权重对应的梯度
         self.g_weight = np.zeros_like(self.weight)
         self.g_bias = np.zeros_like(self.bias)
@@ -133,8 +135,8 @@ class Conv2D(BaseModule):
         self.padding = padding
         self.stride = stride
         # 权重参数
-        self.weight = np.random.randn(in_filters, out_filters, *kernel).astype(np.float64)
-        self.bias = np.zeros(out_filters).astype(np.float64)
+        self.weight = np.random.randn(in_filters, out_filters, *kernel).astype(np.float) * np.sqrt(2 / in_filters)
+        self.bias = np.zeros(out_filters).astype(np.float)
         # 梯度
         self.g_weight = np.zeros_like(self.weight)
         self.g_bias = np.zeros_like(self.bias)
