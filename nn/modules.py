@@ -9,6 +9,7 @@ from typing import List
 
 import numpy as np
 from layers import *
+from losses import *
 
 
 class BaseModule(object):
@@ -33,6 +34,8 @@ class Model(BaseModule):
     def forward(self, x):
         for l in self.layers:
             x = l.forward(x)
+
+        return x
 
     def backward(self, in_gradient):
         for l in self.layers:
@@ -93,12 +96,38 @@ class Linear(BaseModule):
         self.bias -= self.g_bias * lr
 
 
-def test():
-    x = Linear(10, 10)
+def test_linear():
+    # 实际的权重和偏置
+    W = np.array([[3, 7, 4],
+                  [5, 2, 6]])
+    b = np.array([2, 9, 3])
+    # 产生训练样本
+    x_data = np.random.randint(0, 10, 1000).reshape(500, 2)
+    y_data = np.dot(x_data, W) + b
 
-    x.g_bias
-    print(x.backward)
-    x.forward(np.random.randn(3, 10))
+    def next_sample(batch_size=1):
+        idx = np.random.randint(500)
+        return x_data[idx:idx + batch_size], y_data[idx:idx + batch_size]
+
+    m = Model([Linear(2, 3)])
+    i = 0
+    loss = 1
+    while loss > 1e-15:
+        x, y_true = next_sample(2)  # 获取当前样本
+        # 前向传播
+        y = m.forward(x)
+        # 反向传播更新梯度
+        loss, dy = mean_squared_loss(y, y_true)
+        m.backward(dy)
+        # 更新梯度
+        m.update_gradient(0.01)
+
+        # 更新迭代次数
+        i += 1
+        if i % 1000 == 0:
+            print("\n迭代{}次，当前loss:{}, 当前权重:{},当前偏置{}".format(i, loss,
+                                                             m.layers[0].weight,
+                                                             m.layers[0].bias))
 
 
 if __name__ == '__main__':
