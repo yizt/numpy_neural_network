@@ -1,15 +1,49 @@
 # -*- coding: utf-8 -*-
 """
- @File    : module.py
+ @File    : modules.py
  @Time    : 2020/4/18 上午8:28
  @Author  : yizuotian
  @Description    :
 """
+from typing import List
 
-from .layers import *
+import numpy as np
+from layers import *
 
 
-class Linear(object):
+class BaseModule(object):
+    def forward(self, x):
+        pass
+
+    def backward(self, in_gradient):
+        pass
+
+    def update_gradient(self, lr):
+        pass
+
+
+class Model(BaseModule):
+    """
+    网络模型
+    """
+
+    def __init__(self, layers: List[BaseModule]):
+        self.layers = layers
+
+    def forward(self, x):
+        for l in self.layers:
+            x = l.forward(x)
+
+    def backward(self, in_gradient):
+        for l in self.layers:
+            in_gradient = l.backward(in_gradient)
+
+    def update_gradient(self, lr):
+        for l in self.layers:
+            l.update_gradient(lr)
+
+
+class Linear(BaseModule):
     """
     全连接层
     """
@@ -25,7 +59,7 @@ class Linear(object):
         # 权重和偏置的梯度
         self.g_weight = np.zeros_like(self.weight)
         self.g_bias = np.zeros_like(self.bias)
-        # 保存输入feature map
+        # 保存输入feature map,求梯度时需要
         self.in_features = None
 
     def forward(self, x):
@@ -57,3 +91,15 @@ class Linear(object):
         """
         self.weight -= self.g_weight * lr
         self.bias -= self.g_bias * lr
+
+
+def test():
+    x = Linear(10, 10)
+
+    x.g_bias
+    print(x.backward)
+    x.forward(np.random.randn(3, 10))
+
+
+if __name__ == '__main__':
+    test()
