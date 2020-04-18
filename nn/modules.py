@@ -185,6 +185,44 @@ class ReLU(BaseModule):
         return out_gradient
 
 
+class MaxPooling2D(BaseModule):
+    def __init__(self, kernel=(2, 2), stride=(2, 2), padding=(0, 0), **kwargs):
+        """
+
+        :param kernel: 池化尺寸
+        :param stride: 步长
+        :param padding: padding
+        :param kwargs:
+        """
+        super(MaxPooling2D, self).__init__(**kwargs)
+        self.kernel = kernel
+        self.stride = stride
+        self.padding = padding
+
+    def forward(self, x):
+        """
+
+        :param x: [B,C,H,W]
+        :return output : [B,C,H',W']
+        """
+        self.in_features = x
+        output = max_pooling_forward(x, self.kernel, self.stride, self.padding)
+        return output
+
+    def backward(self, in_gradient):
+        """
+
+        :param in_gradient: 后一层传递过来的梯度
+        :return out_gradient: 传递给前一层的梯度
+        """
+        out_gradient = max_pooling_backward(in_gradient,
+                                            self.in_features,
+                                            self.kernel,
+                                            self.stride,
+                                            self.padding)
+        return out_gradient
+
+
 def test_linear():
     # 实际的权重和偏置
     W = np.array([[3, 7, 4],
