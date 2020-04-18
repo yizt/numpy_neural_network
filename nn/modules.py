@@ -9,6 +9,7 @@ from typing import List
 
 import numpy as np
 import pyximport
+from activations import *
 from layers import *
 from losses import *
 
@@ -17,6 +18,16 @@ from nn.clayers import conv_forward
 
 
 class BaseModule(object):
+    def __init__(self, name=''):
+        """
+
+        :param name: 层名
+        """
+        self.name = name
+        self.weights = dict()  # 权重参数字典
+        self.gradients = dict()  # 梯度字典
+        self.in_features = None  # 输入的feature map
+
     def forward(self, x):
         pass
 
@@ -55,19 +66,24 @@ class Linear(BaseModule):
     全连接层
     """
 
-    def __init__(self, in_units, out_units):
+    def __init__(self, in_units, out_units, **kwargs):
         """
 
         :param in_units: 输入神经元数
         :param out_units: 输出神经元数
         """
+        super(Linear, self).__init__(**kwargs)
         self.weight = np.random.randn(in_units, out_units).astype(np.float64)
         self.bias = np.zeros(out_units).astype(np.float64)
-        # 权重和偏置的梯度
+        # 权重对应的梯度
         self.g_weight = np.zeros_like(self.weight)
         self.g_bias = np.zeros_like(self.bias)
-        # 保存输入feature map,求梯度时需要
-        self.in_features = None
+        # 权重和梯度的字典
+        self.weights = {"{}_weight".format(self.name): self.weight,
+                        "{}_bias".format(self.name): self.bias}
+
+        self.gradients = {"{}_weight".format(self.name): self.weight,
+                          "{}_bias".format(self.name): self.bias}
 
     def forward(self, x):
         """
@@ -105,7 +121,8 @@ class Conv2D(BaseModule):
     2D卷积层
     """
 
-    def __init__(self, in_filters, out_filters, kernel=(3, 3), padding=(1, 1), stride=(1, 1)):
+    def __init__(self, in_filters, out_filters, kernel=(3, 3), padding=(1, 1), stride=(1, 1), **kwargs):
+        super(Conv2D, self).__init__(**kwargs)
         self.in_filters = in_filters
         self.out_filters = out_filters
         self.kernel = kernel
@@ -117,8 +134,12 @@ class Conv2D(BaseModule):
         # 梯度
         self.g_weight = np.zeros_like(self.weight)
         self.g_bias = np.zeros_like(self.bias)
-        # 保存输入feature map,求梯度时需要
-        self.in_features = None
+        # 权重和梯度的字典
+        self.weights = {"{}_weight".format(self.name): self.weight,
+                        "{}_bias".format(self.name): self.bias}
+
+        self.gradients = {"{}_weight".format(self.name): self.weight,
+                          "{}_bias".format(self.name): self.bias}
 
     def forward(self, x):
         """
@@ -179,7 +200,8 @@ def test_linear():
             print("\n迭代{}次，当前loss:{}, 当前权重:{},当前偏置{}".format(i, loss,
                                                              m.layers[0].weight,
                                                              m.layers[0].bias))
+    print(m.layers[0].weights)
 
 
 if __name__ == '__main__':
-    test()
+    test_linear()
