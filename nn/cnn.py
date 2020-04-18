@@ -6,13 +6,15 @@
  @Description    : 卷积网络
 """
 import os
-
+import sys
 import numpy as np
 from six.moves import cPickle
 
 from losses import cross_entropy_loss
 from optimizers import SGD
+from utils import to_categorical
 from vgg import VGG
+
 
 
 def load_batch(fpath, label_key='labels'):
@@ -66,12 +68,11 @@ def load_cifar(path):
     x_train = x_train.astype(np.float) / 255. - 1.
     x_test = x_test.astype(np.float) / 255. - 1.
 
-    return (x_train, y_train), (x_test, y_test)
+    return (x_train, to_categorical(y_train)), (x_test, to_categorical(y_test))
 
 
-def main():
+def main(path):
     # 数据加载
-    path = '/Users/yizuotian/dataset/cifar-10-batches-py'
     (x_train, y_train), (x_test, y_test) = load_cifar(path)
 
     # 随机选择训练样本
@@ -92,21 +93,24 @@ def main():
         y_predict = vgg.forward(x.astype(np.float))
         # 计算loss
         loss, gradient = cross_entropy_loss(y_predict, y_true)
+
         # 反向传播
         vgg.backward(gradient)
         # 更新梯度
         sgd.iterate(vgg.weights, vgg.gradients)
 
-        #
+        # 打印信息
         print('step:{},loss:{}'.format(step, loss))
 
 
-def test():
-    path = '/Users/yizuotian/dataset/cifar-10-batches-py'
+def test(path):
     (x_train, y_train), (x_test, y_test) = load_cifar(path)
     print(x_train[0][0])
+    print(y_train[0])
 
 
 if __name__ == '__main__':
-    # test()
-    main()
+    # cifar_root = '/Users/yizuotian/dataset/cifar-10-batches-py'
+    # test(cifar_root)
+    cifar_root = sys.argv[1]
+    main(cifar_root)

@@ -66,9 +66,11 @@ class VGG(Model):
 
 def test():
     import time
-    vgg16 = VGG(name='vgg16')
+    vgg16 = VGG(name='vgg11')
     start = time.time()
-    vgg16.forward(np.random.randn(6, 3, 224, 224))
+    y = vgg16.forward(np.random.randn(6, 3, 32, 32))
+    loss, dy = cross_entropy_loss(y, np.abs(np.random.randn(6, 10)))
+    vgg16.backward(dy)
     print('耗时:{}'.format(time.time() - start))
 
 
