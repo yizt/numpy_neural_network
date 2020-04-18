@@ -91,7 +91,7 @@ def main(args):
     for step in range(num_steps):
         x, y_true = next_batch(args.batch_size)
         # 前向传播
-        y_predict = vgg.forward(x.astype(np.float))
+        y_predict = vgg.forward(x.astype(np.float32))
         # print('y_pred:{}'.format(y_predict))
         # 计算loss
         loss, gradient = cross_entropy_loss(y_predict, y_true)
