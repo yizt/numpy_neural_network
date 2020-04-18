@@ -8,8 +8,12 @@
 from typing import List
 
 import numpy as np
+import pyximport
 from layers import *
 from losses import *
+
+pyximport.install()
+from nn.clayers import conv_forward
 
 
 class BaseModule(object):
@@ -92,6 +96,53 @@ class Linear(BaseModule):
         :param lr:
         :return:
         """
+        self.weight -= self.g_weight * lr
+        self.bias -= self.g_bias * lr
+
+
+class Conv2D(BaseModule):
+    """
+    2D卷积层
+    """
+
+    def __init__(self, in_filters, out_filters, kernel=(3, 3), padding=(1, 1), stride=(1, 1)):
+        self.in_filters = in_filters
+        self.out_filters = out_filters
+        self.kernel = kernel
+        self.padding = padding
+        self.stride = stride
+        # 权重参数
+        self.weight = np.random.randn(in_filters, out_filters, *kernel).astype(np.float64)
+        self.bias = np.zeros(out_filters).astype(np.float64)
+        # 梯度
+        self.g_weight = np.zeros_like(self.weight)
+        self.g_bias = np.zeros_like(self.bias)
+        # 保存输入feature map,求梯度时需要
+        self.in_features = None
+
+    def forward(self, x):
+        """
+
+        :param x: [B,in_filters,H,W]
+        :return output:  [B,out_filters,H,W]
+        """
+        self.in_features = x
+        output = conv_forward(x, self.weight, self.bias, self.padding, self.stride)
+        return output
+
+    def backward(self, in_gradient):
+        """
+
+        :param in_gradient: 后一层传递过来的梯度，[B,out_filters,H,W]
+        :return out_gradient: 传递给前一层的梯度，[B,in_filters,H,W]
+        """
+        self.g_weight, self.g_bias, out_gradient = conv_backward(in_gradient,
+                                                                 self.weight,
+                                                                 self.in_features,
+                                                                 self.padding, self.stride)
+        return out_gradient
+
+    def update_gradient(self, lr):
         self.weight -= self.g_weight * lr
         self.bias -= self.g_bias * lr
 
