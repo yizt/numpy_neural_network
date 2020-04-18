@@ -9,7 +9,7 @@ Created on 2018/8/19 15:03
 import numpy as np
 import pyximport
 pyximport.install()
-from nn.clayers import conv_forward
+from clayers import conv_forward
 
 
 def fc_forward(z, W, b):

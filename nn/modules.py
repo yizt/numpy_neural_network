@@ -12,7 +12,7 @@ from layers import *
 from losses import *
 
 pyximport.install()
-from nn.clayers import *
+from clayers import *
 
 
 class BaseModule(object):
