@@ -5,8 +5,10 @@
  @Author  : yizuotian
  @Description    : 卷积网络
 """
+import argparse
 import os
-import sys
+import time
+
 import numpy as np
 from six.moves import cPickle
 
@@ -14,7 +16,6 @@ from losses import cross_entropy_loss
 from optimizers import SGD
 from utils import to_categorical
 from vgg import VGG
-
 
 
 def load_batch(fpath, label_key='labels'):
@@ -71,9 +72,9 @@ def load_cifar(path):
     return (x_train, to_categorical(y_train)), (x_test, to_categorical(y_test))
 
 
-def main(path):
+def main(args):
     # 数据加载
-    (x_train, y_train), (x_test, y_test) = load_cifar(path)
+    (x_train, y_train), (x_test, y_test) = load_cifar(args.cifar_root)
 
     # 随机选择训练样本
     train_num = x_train.shape[0]
@@ -84,33 +85,47 @@ def main(path):
 
     # 网络
     vgg = VGG(image_size=32, name='vgg11')
-    sgd = SGD(vgg.weights)
+    sgd = SGD(vgg.weights, lr=0.0001)
     # 训练
-    num_steps = 1000
+    num_steps = args.steps
     for step in range(num_steps):
-        x, y_true = next_batch(4)
+        x, y_true = next_batch(args.batch_size)
         # 前向传播
         y_predict = vgg.forward(x.astype(np.float))
+        # print('y_pred:{}'.format(y_predict))
         # 计算loss
         loss, gradient = cross_entropy_loss(y_predict, y_true)
 
         # 反向传播
         vgg.backward(gradient)
         # 更新梯度
-        sgd.iterate(vgg.weights, vgg.gradients)
+        sgd.iterate(vgg)
 
         # 打印信息
-        print('step:{},loss:{}'.format(step, loss))
+        print('{} step:{},loss:{}'.format(time.asctime(time.localtime(time.time())),
+                                          step, loss))
 
 
 def test(path):
     (x_train, y_train), (x_test, y_test) = load_cifar(path)
     print(x_train[0][0])
     print(y_train[0])
+    vgg = VGG(name='vgg11')
+    import utils
+    utils.save_weights('./w.pkl', vgg.weights)
+    w = utils.load_weights('./w.pkl')
+    print(type(w))
+    print(w.keys())
 
 
 if __name__ == '__main__':
     # cifar_root = '/Users/yizuotian/dataset/cifar-10-batches-py'
     # test(cifar_root)
-    cifar_root = sys.argv[1]
-    main(cifar_root)
+
+    parse = argparse.ArgumentParser()
+    parse.add_argument('-d', '--cifar-root', type=str,
+                       default='/Users/yizuotian/dataset/cifar-10-batches-py')
+    parse.add_argument('-b', '--batch-size', type=int, default=8)
+    parse.add_argument('-s', '--steps', type=int, default=10000)
+    arguments = parse.parse_args()
+    main(arguments)

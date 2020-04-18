@@ -10,6 +10,7 @@ from typing import List
 from activations import *
 from layers import *
 from losses import *
+from optimizers import *
 
 pyximport.install()
 from clayers import *
@@ -79,17 +80,35 @@ class Linear(BaseModule):
         :param out_units: 输出神经元数
         """
         super(Linear, self).__init__(**kwargs)
-        self.weight = np.random.randn(in_units, out_units).astype(np.float) * np.sqrt(2 / in_units / out_units)
-        self.bias = np.zeros(out_units).astype(np.float)
+        # 权重参数
+        weight = np.random.randn(in_units, out_units).astype(np.float) * np.sqrt(2 / in_units / out_units)
+        bias = np.zeros(out_units).astype(np.float)
         # 权重对应的梯度
-        self.g_weight = np.zeros_like(self.weight)
-        self.g_bias = np.zeros_like(self.bias)
+        g_weight = np.zeros_like(weight)
+        g_bias = np.zeros_like(bias)
         # 权重和梯度的字典
-        self.weights = {"{}_weight".format(self.name): self.weight,
-                        "{}_bias".format(self.name): self.bias}
+        self.weights = {"{}_weight".format(self.name): weight,
+                        "{}_bias".format(self.name): bias}
 
-        self.gradients = {"{}_weight".format(self.name): self.weight,
-                          "{}_bias".format(self.name): self.bias}
+        self.gradients = {"{}_weight".format(self.name): g_weight,
+                          "{}_bias".format(self.name): g_bias}
+
+    @property
+    def weight(self):
+        return self.weights["{}_weight".format(self.name)]
+
+    @property
+    def bias(self):
+        return self.weights["{}_bias".format(self.name)]
+
+    def set_gradient(self, name, gradient):
+        """
+        更新梯度
+        :param name: weight 或 bias 中一个
+        :param gradient:
+        :return:
+        """
+        self.gradients["{}_{}".format(self.name, name)] = gradient
 
     def forward(self, x):
         """
@@ -107,9 +126,11 @@ class Linear(BaseModule):
         :param in_gradient: 后一层传递过来的梯度，[B,out_units]
         :return out_gradient: 传递给前一层的梯度，[B,in_units]
         """
-        self.g_weight, self.g_bias, out_gradient = fc_backward(in_gradient,
-                                                               self.weight,
-                                                               self.in_features)
+        g_weight, g_bias, out_gradient = fc_backward(in_gradient,
+                                                     self.weight,
+                                                     self.in_features)
+        self.set_gradient('weight', g_weight)
+        self.set_gradient('bias', g_bias)
         return out_gradient
 
     def update_gradient(self, lr):
@@ -135,17 +156,34 @@ class Conv2D(BaseModule):
         self.padding = padding
         self.stride = stride
         # 权重参数
-        self.weight = np.random.randn(in_filters, out_filters, *kernel).astype(np.float) * np.sqrt(2 / in_filters)
-        self.bias = np.zeros(out_filters).astype(np.float)
+        weight = np.random.randn(in_filters, out_filters, *kernel).astype(np.float) * np.sqrt(2 / in_filters)
+        bias = np.zeros(out_filters).astype(np.float)
         # 梯度
-        self.g_weight = np.zeros_like(self.weight)
-        self.g_bias = np.zeros_like(self.bias)
+        g_weight = np.zeros_like(weight)
+        g_bias = np.zeros_like(bias)
         # 权重和梯度的字典
-        self.weights = {"{}_weight".format(self.name): self.weight,
-                        "{}_bias".format(self.name): self.bias}
+        self.weights = {"{}_weight".format(self.name): weight,
+                        "{}_bias".format(self.name): bias}
 
-        self.gradients = {"{}_weight".format(self.name): self.weight,
-                          "{}_bias".format(self.name): self.bias}
+        self.gradients = {"{}_weight".format(self.name): g_weight,
+                          "{}_bias".format(self.name): g_bias}
+
+    @property
+    def weight(self):
+        return self.weights["{}_weight".format(self.name)]
+
+    @property
+    def bias(self):
+        return self.weights["{}_bias".format(self.name)]
+
+    def set_gradient(self, name, gradient):
+        """
+        更新梯度
+        :param name: weight 或 bias 中一个
+        :param gradient:
+        :return:
+        """
+        self.gradients["{}_{}".format(self.name, name)] = gradient
 
     def forward(self, x):
         """
@@ -163,10 +201,12 @@ class Conv2D(BaseModule):
         :param in_gradient: 后一层传递过来的梯度，[B,out_filters,H,W]
         :return out_gradient: 传递给前一层的梯度，[B,in_filters,H,W]
         """
-        self.g_weight, self.g_bias, out_gradient = conv_backward(in_gradient,
-                                                                 self.weight,
-                                                                 self.in_features,
-                                                                 self.padding, self.stride)
+        g_weight, g_bias, out_gradient = conv_backward(in_gradient,
+                                                       self.weight,
+                                                       self.in_features,
+                                                       self.padding, self.stride)
+        self.set_gradient('weight', g_weight)
+        self.set_gradient('bias', g_bias)
         return out_gradient
 
     def update_gradient(self, lr):
@@ -298,7 +338,8 @@ def test_linear():
         idx = np.random.randint(500)
         return x_data[idx:idx + batch_size], y_data[idx:idx + batch_size]
 
-    m = Model([Linear(2, 3)])
+    m = Model([Linear(2, 3, name='fc1')])
+    sgd = SGD(m.weights, lr=1e-2)
     i = 0
     loss = 1
     while loss > 1e-15:
@@ -309,15 +350,18 @@ def test_linear():
         loss, dy = mean_squared_loss(y, y_true)
         m.backward(dy)
         # 更新梯度
-        m.update_gradient(0.01)
+        sgd.iterate(m)
 
         # 更新迭代次数
         i += 1
         if i % 1000 == 0:
-            print("\n迭代{}次，当前loss:{}, 当前权重:{},当前偏置{}".format(i, loss,
-                                                             m.layers[0].weight,
-                                                             m.layers[0].bias))
-    print(m.layers[0].weights)
+            print("\n迭代{}次，当前loss:{}, 当前权重:{},当前偏置{},梯度:{}".format(i, loss,
+                                                                   m.layers[0].weight,
+                                                                   m.layers[0].bias,
+                                                                   m.layers[0].gradients))
+            # print(m.weights)
+
+    print('迭代{}次,当前权重:{} '.format(i, m.layers[0].weights))
 
 
 if __name__ == '__main__':

@@ -9,6 +9,8 @@ Created on 2018/9/4 22:26
 """
 import numpy as np
 
+from modules import Model
+
 
 def _copy_weights_to_zeros(weights):
     result = {}
@@ -37,20 +39,20 @@ class SGD(object):
         self.momentum = momentum
         self.decay = decay
 
-    def iterate(self, weights, gradients):
+    def iterate(self, m: Model):
         """
         迭代一次
-        :param weights: 当前迭代权重
-        :param gradients: 当前迭代梯度
+        :param m: 模型
         :return:
         """
         # 更新学习率
         self.lr = self.init_lr / (1 + self.iterations * self.decay)
 
         # 更新动量和梯度
-        for key in self.v.keys():
-            self.v[key] = self.momentum * self.v[key] + self.lr * gradients[key]
-            weights[key] = weights[key] - self.v[key]
+        for layer in m.layers:
+            for key in layer.weights.keys():
+                self.v[key] = self.momentum * self.v[key] + self.lr * layer.gradients[key]
+                layer.weights[key] = layer.weights[key] - self.v[key]
 
         # 更新迭代次数
         self.iterations += 1
