@@ -14,7 +14,7 @@ from layers import *
 from losses import *
 
 pyximport.install()
-from nn.clayers import conv_forward
+from nn.clayers import *
 
 
 class BaseModule(object):
