@@ -100,7 +100,7 @@ class Linear(BaseModule):
         """
         super(Linear, self).__init__(**kwargs)
         # 权重参数
-        weight = np.random.randn(in_units, out_units).astype(np.float32) * np.sqrt(2 / in_units / out_units)
+        weight = np.random.randn(in_units, out_units).astype(np.float32) * np.sqrt(2 / in_units)
         bias = np.zeros(out_units).astype(np.float32)
         # 权重对应的梯度
         g_weight = np.zeros_like(weight)
@@ -174,8 +174,10 @@ class Conv2D(BaseModule):
         self.kernel = kernel
         self.padding = padding
         self.stride = stride
+
         # 权重参数
-        weight = np.random.randn(in_filters, out_filters, *kernel).astype(np.float32) * np.sqrt(2 / in_filters)
+        fan_in = in_filters * out_filters * kernel[0] * kernel[1]  # 输入参数量
+        weight = np.random.randn(in_filters, out_filters, *kernel).astype(np.float32) * np.sqrt(2 / fan_in)
         bias = np.zeros(out_filters).astype(np.float32)
         # 梯度
         g_weight = np.zeros_like(weight)
