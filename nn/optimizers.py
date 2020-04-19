@@ -52,7 +52,7 @@ class SGD(object):
         for layer in m.layers:
             for key in layer.weights.keys():
                 self.v[key] = self.momentum * self.v[key] + self.lr * layer.gradients[key]
-                layer.weights[key] = layer.weights[key] - self.v[key]
+                layer.weights[key] -= - self.v[key]
 
         # 更新迭代次数
         self.iterations += 1
@@ -73,21 +73,20 @@ class AdaGrad(object):
         self.epsilon = epsilon
         self.decay = decay
 
-    def iterate(self, weights, gradients):
+    def iterate(self, m: Model):
         """
         迭代一次
-        :param weights: 当前迭代权重
-        :param gradients: 当前迭代梯度
+        :param m: 模型
         :return:
         """
         # 更新学习率
         self.lr = self.init_lr / (1 + self.iterations * self.decay)
 
         # 更新权重平方和累加量 和 梯度
-        for key in self.s.keys():
-            self.s[key] += np.square(weights[key])
-            weights[key] -= self.lr * gradients[key] / np.sqrt(self.s[key] + self.epsilon)
-
+        for layer in m.layers:
+            for key in layer.weights.keys():
+                self.s[key] += np.square(layer.weights[key])
+                layer.weights[key] -= self.lr * layer.gradients[key] / np.sqrt(self.s[key] + self.epsilon)
         # 更新迭代次数
         self.iterations += 1
 
@@ -109,20 +108,19 @@ class RmsProp(object):
         self.epsilon = epsilon
         self.decay = decay
 
-    def iterate(self, weights, gradients):
+    def iterate(self, m: Model):
         """
         迭代一次
-        :param weights: 当前迭代权重
-        :param gradients: 当前迭代梯度
+        :param m: 模型
         :return:
         """
         # 更新学习率
         self.lr = self.init_lr / (1 + self.iterations * self.decay)
 
         # 更新权重平方和累加量 和 梯度
-        for key in self.s.keys():
-            self.s[key] = self.gamma * self.s[key] + (1 - self.gamma) * np.square(weights[key])
-            weights[key] -= self.lr * gradients[key] / np.sqrt(self.s[key] + self.epsilon)
-
+        for layer in m.layers:
+            for key in layer.weights.keys():
+                self.s[key] = self.gamma * self.s[key] + (1 - self.gamma) * np.square(layer.weights[key])
+                layer.weights[key] -= self.lr * layer.gradients[key] / np.sqrt(self.s[key] + self.epsilon)
         # 更新迭代次数
         self.iterations += 1
