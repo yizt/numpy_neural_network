@@ -36,6 +36,15 @@ class BaseModule(object):
     def update_gradient(self, lr):
         pass
 
+    def load_weights(self, weights):
+        """
+        加载权重
+        :param weights:
+        :return:
+        """
+        for key in self.weights.keys():
+            self.weights[key] = weights[key]
+
 
 class Model(BaseModule):
     """
@@ -66,6 +75,16 @@ class Model(BaseModule):
     def update_gradient(self, lr):
         for l in self.layers:
             l.update_gradient(lr)
+
+    def load_weights(self, weights):
+        """
+        加载模型权重
+        :param weights:
+        :return:
+        """
+        # 逐层加载权重
+        for l in self.layers:
+            l.load_weights(weights)
 
 
 class Linear(BaseModule):

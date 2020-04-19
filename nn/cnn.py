@@ -14,7 +14,7 @@ from six.moves import cPickle
 
 from losses import cross_entropy_loss
 from optimizers import SGD
-from utils import to_categorical, save_weights
+from utils import to_categorical, save_weights, load_weights
 from vgg import VGG
 
 
@@ -85,7 +85,14 @@ def main(args):
 
     # 网络
     vgg = VGG(image_size=32, name='vgg11')
-    sgd = SGD(vgg.weights, lr=0.0001)
+    sgd = SGD(vgg.weights, lr=1e-5)
+
+    # 加载权重
+    if args.checkpoint:
+        weights = load_weights(args.checkpoint)
+        vgg.load_weights(weights)
+        print("load weights done")
+    
     # 训练
     num_steps = args.steps
     for step in range(num_steps):
@@ -131,6 +138,7 @@ if __name__ == '__main__':
     parse.add_argument('-d', '--cifar-root', type=str,
                        default='/Users/yizuotian/dataset/cifar-10-batches-py')
     parse.add_argument('-o', '--save-dir', type=str, default='/tmp')
+    parse.add_argument('-c', '--checkpoint', type=str, default=None)
     parse.add_argument('-b', '--batch-size', type=int, default=8)
     parse.add_argument('-s', '--steps', type=int, default=10000)
     arguments = parse.parse_args()
