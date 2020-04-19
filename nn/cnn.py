@@ -9,11 +9,10 @@ import argparse
 import os
 import time
 
-import numpy as np
 from six.moves import cPickle
 
 from losses import cross_entropy_loss
-from optimizers import SGD
+from optimizers import *
 from utils import to_categorical, save_weights, load_weights
 from vgg import VGG
 
@@ -66,9 +65,11 @@ def load_cifar(path):
     y_train = np.reshape(y_train, (len(y_train), 1))
     y_test = np.reshape(y_test, (len(y_test), 1))
     # 归一化
-    x_train = x_train.astype(np.float) / 255. - 1.
-    x_test = x_test.astype(np.float) / 255. - 1.
-
+    # x_train = x_train.astype(np.float) / 255. - 1.
+    # x_test = x_test.astype(np.float) / 255. - 1.
+    mean = np.array([123.680, 116.779, 103.939])
+    x_train = x_train.astype(np.float) - mean[:, np.newaxis, np.newaxis]
+    x_test = x_test.astype(np.float) - mean[:, np.newaxis, np.newaxis]
     return (x_train, to_categorical(y_train)), (x_test, to_categorical(y_test))
 
 
@@ -85,7 +86,7 @@ def main(args):
 
     # 网络
     vgg = VGG(image_size=32, name='vgg11')
-    sgd = SGD(vgg.weights, lr=args.lr)
+    opt = SGD(vgg.weights, lr=args.lr, decay=1e-3)
 
     # 加载权重
     if args.checkpoint:
@@ -99,14 +100,17 @@ def main(args):
         x, y_true = next_batch(args.batch_size)
         # 前向传播
         y_predict = vgg.forward(x.astype(np.float32))
-        # print('y_pred:{}'.format(y_predict))
+        # print('y_pred: min{},max{},mean:{}'.format(np.min(y_predict, axis=-1),
+        #                                            np.max(y_predict, axis=-1),
+        #                                            np.mean(y_predict, axis=-1)))
+        # print('y_pred: {}'.format(y_predict))
         # 计算loss
         loss, gradient = cross_entropy_loss(y_predict, y_true)
 
         # 反向传播
         vgg.backward(gradient)
         # 更新梯度
-        sgd.iterate(vgg)
+        opt.iterate(vgg)
 
         # 打印信息
         print('{} step:{},loss:{}'.format(time.asctime(time.localtime(time.time())),
@@ -139,8 +143,8 @@ if __name__ == '__main__':
                        default='/Users/yizuotian/dataset/cifar-10-batches-py')
     parse.add_argument('-o', '--save-dir', type=str, default='/tmp')
     parse.add_argument('-c', '--checkpoint', type=str, default=None)
-    parse.add_argument('-b', '--batch-size', type=int, default=8)
-    parse.add_argument('--lr', type=float, default=1e-2)
+    parse.add_argument('-b', '--batch-size', type=int, default=32)
+    parse.add_argument('--lr', type=float, default=2e-2)
     parse.add_argument('-s', '--steps', type=int, default=10000)
     arguments = parse.parse_args()
     main(arguments)
