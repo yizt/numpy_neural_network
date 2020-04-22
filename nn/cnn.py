@@ -70,6 +70,11 @@ def load_cifar(path):
     mean = np.array([123.680, 116.779, 103.939])
     x_train = x_train.astype(np.float) - mean[:, np.newaxis, np.newaxis]
     x_test = x_test.astype(np.float) - mean[:, np.newaxis, np.newaxis]
+    x_train /= 255.
+    x_test /= 255
+    std = np.array([0.24580306, 0.24236229, 0.2603115])
+    x_train /= std[:, np.newaxis, np.newaxis]
+    x_test /= std[:, np.newaxis, np.newaxis]
     return (x_train, to_categorical(y_train)), (x_test, to_categorical(y_test))
 
 
@@ -100,10 +105,10 @@ def main(args):
         x, y_true = next_batch(args.batch_size)
         # 前向传播
         y_predict = vgg.forward(x.astype(np.float32))
-        # print('y_pred: min{},max{},mean:{}'.format(np.min(y_predict, axis=-1),
-        #                                            np.max(y_predict, axis=-1),
-        #                                            np.mean(y_predict, axis=-1)))
-        # print('y_pred: {}'.format(y_predict))
+        print('y_pred: min{},max{},mean:{}'.format(np.min(y_predict, axis=-1),
+                                                   np.max(y_predict, axis=-1),
+                                                   np.mean(y_predict, axis=-1)))
+        print('y_pred: {}'.format(y_predict))
         # 计算loss
         loss, gradient = cross_entropy_loss(y_predict, y_true)
 
