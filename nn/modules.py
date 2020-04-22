@@ -176,8 +176,11 @@ class Conv2D(BaseModule):
         self.stride = stride
 
         # 权重参数
-        fan_in = in_filters * out_filters * kernel[0] * kernel[1]  # 输入参数量
-        weight = np.random.randn(in_filters, out_filters, *kernel).astype(np.float32) * np.sqrt(2 / fan_in)
+        fan_in = in_filters * kernel[0] * kernel[1]  # 输入参数量
+        fan_out = out_filters * kernel[0] * kernel[1]  # 输入参数量
+        weight = np.random.randn(in_filters,
+                                 out_filters,
+                                 *kernel).astype(np.float32) * np.sqrt(2 / (fan_in + fan_out))
         bias = np.zeros(out_filters).astype(np.float32)
         # 梯度
         g_weight = np.zeros_like(weight)
