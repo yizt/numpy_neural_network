@@ -53,7 +53,7 @@ def main(args):
     if args.eval_only:
         indices = np.random.choice(len(x_test), args.eval_num, replace=False)
         print('{} start evaluate'.format(time.asctime(time.localtime(time.time()))))
-        acc = get_accuracy(vgg, x_test[indices], ys=[indices])
+        acc = get_accuracy(vgg, x_test[indices], ys=y_test[indices])
         print('{} acc on test dataset is :{:.3f}'.format(time.asctime(time.localtime(time.time())),
                                                          acc))
         return
