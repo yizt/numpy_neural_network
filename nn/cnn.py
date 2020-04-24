@@ -78,6 +78,19 @@ def load_cifar(path):
     return (x_train, to_categorical(y_train)), (x_test, to_categorical(y_test))
 
 
+def get_accuracy(net, xs, ys):
+    """
+
+    :param net:
+    :param xs:
+    :param ys:
+    :return:
+    """
+    score = net.forward(xs)
+    acc = np.mean(np.argmax(score, axis=1) == np.argmax(ys, axis=1))
+    return acc
+
+
 def main(args):
     # 数据加载
     (x_train, y_train), (x_test, y_test) = load_cifar(args.cifar_root)
@@ -98,6 +111,15 @@ def main(args):
         weights = load_weights(args.checkpoint)
         vgg.load_weights(weights)
         print("load weights done")
+
+    # 评估
+    if args.eval_only:
+        indices = np.random.choice(10000, args.eval_num, replace=False)
+        print('{} start evaluate'.format(time.asctime(time.localtime(time.time()))))
+        acc = get_accuracy(vgg, x_test[indices], ys=[indices])
+        print('{} acc on test dataset is :{:.3f}'.format(time.asctime(time.localtime(time.time())),
+                                                         acc))
+        return
 
     # 训练
     num_steps = args.steps
@@ -151,5 +173,7 @@ if __name__ == '__main__':
     parse.add_argument('-b', '--batch-size', type=int, default=32)
     parse.add_argument('--lr', type=float, default=2e-5)
     parse.add_argument('-s', '--steps', type=int, default=10000)
+    parse.add_argument('--eval-only', action='store_true', default=False)
+    parse.add_argument('--eval-num', type=int, default=100)
     arguments = parse.parse_args()
     main(arguments)
