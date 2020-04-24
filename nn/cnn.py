@@ -9,73 +9,10 @@ import argparse
 import os
 import time
 
-from six.moves import cPickle
-
 from losses import cross_entropy_loss
 from optimizers import *
-from utils import to_categorical, save_weights, load_weights
+from utils import load_cifar, save_weights, load_weights
 from vgg import VGG
-
-
-def load_batch(fpath, label_key='labels'):
-    """Internal utility for parsing CIFAR data.
-
-    # Arguments
-        fpath: path the file to parse.
-        label_key: key for label data in the retrieve
-            dictionary.
-
-    # Returns
-        A tuple `(data, labels)`.
-    """
-    with open(fpath, 'rb') as f:
-        d = cPickle.load(f, encoding='bytes')
-        # decode utf8
-        d_decoded = {}
-        for k, v in d.items():
-            d_decoded[k.decode('utf8')] = v
-        d = d_decoded
-    data = d['data']
-    labels = d[label_key]
-
-    data = data.reshape(data.shape[0], 3, 32, 32)
-    return data, labels
-
-
-def load_cifar(path):
-    """Loads CIFAR10 dataset.
-
-    # Returns
-        Tuple of Numpy arrays: `(x_train, y_train), (x_test, y_test)`.
-    """
-
-    num_train_samples = 50000
-
-    x_train = np.empty((num_train_samples, 3, 32, 32), dtype='uint8')
-    y_train = np.empty((num_train_samples,), dtype='uint8')
-
-    for i in range(1, 6):
-        fpath = os.path.join(path, 'data_batch_' + str(i))
-        (x_train[(i - 1) * 10000: i * 10000, :, :, :],
-         y_train[(i - 1) * 10000: i * 10000]) = load_batch(fpath)
-
-    fpath = os.path.join(path, 'test_batch')
-    x_test, y_test = load_batch(fpath)
-
-    y_train = np.reshape(y_train, (len(y_train), 1))
-    y_test = np.reshape(y_test, (len(y_test), 1))
-    # 归一化
-    # x_train = x_train.astype(np.float) / 255. - 1.
-    # x_test = x_test.astype(np.float) / 255. - 1.
-    mean = np.array([123.680, 116.779, 103.939])
-    x_train = x_train.astype(np.float) - mean[:, np.newaxis, np.newaxis]
-    x_test = x_test.astype(np.float) - mean[:, np.newaxis, np.newaxis]
-    x_train /= 255.
-    x_test /= 255
-    std = np.array([0.24580306, 0.24236229, 0.2603115])
-    x_train /= std[:, np.newaxis, np.newaxis]
-    x_test /= std[:, np.newaxis, np.newaxis]
-    return (x_train, to_categorical(y_train)), (x_test, to_categorical(y_test))
 
 
 def get_accuracy(net, xs, ys):
@@ -86,7 +23,7 @@ def get_accuracy(net, xs, ys):
     :param ys:
     :return:
     """
-    score = net.forward(xs)
+    score = net.forward(xs.astype(np.float32))
     acc = np.mean(np.argmax(score, axis=1) == np.argmax(ys, axis=1))
     return acc
 
@@ -114,7 +51,7 @@ def main(args):
 
     # 评估
     if args.eval_only:
-        indices = np.random.choice(10000, args.eval_num, replace=False)
+        indices = np.random.choice(len(x_test), args.eval_num, replace=False)
         print('{} start evaluate'.format(time.asctime(time.localtime(time.time()))))
         acc = get_accuracy(vgg, x_test[indices], ys=[indices])
         print('{} acc on test dataset is :{:.3f}'.format(time.asctime(time.localtime(time.time())),
@@ -127,10 +64,11 @@ def main(args):
         x, y_true = next_batch(args.batch_size)
         # 前向传播
         y_predict = vgg.forward(x.astype(np.float32))
-        print('y_pred: min{},max{},mean:{}'.format(np.min(y_predict, axis=-1),
-                                                   np.max(y_predict, axis=-1),
-                                                   np.mean(y_predict, axis=-1)))
-        print('y_pred: {}'.format(y_predict))
+        # print('y_pred: min{},max{},mean:{}'.format(np.min(y_predict, axis=-1),
+        #                                            np.max(y_predict, axis=-1),
+        #                                            np.mean(y_predict, axis=-1)))
+        # print('y_pred: {}'.format(y_predict))
+        acc = np.mean(np.argmax(y_predict, axis=1) == np.argmax(y_true, axis=1))
         # 计算loss
         loss, gradient = cross_entropy_loss(y_predict, y_true)
 
@@ -140,8 +78,10 @@ def main(args):
         opt.iterate(vgg)
 
         # 打印信息
-        print('{} step:{},loss:{}'.format(time.asctime(time.localtime(time.time())),
-                                          step, loss))
+        print('{} step:{},loss:{:.4f},acc:{:.4f}'.format(time.asctime(time.localtime(time.time())),
+                                                         step,
+                                                         loss,
+                                                         acc))
 
         # 保存权重
         if step % 100 == 0:
