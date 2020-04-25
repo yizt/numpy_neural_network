@@ -1125,9 +1125,9 @@ struct __pyx_opt_args_2nn_7clayers_max_pooling_backward;
 /* "nn/clayers.pyx":15
  * 
  * 
- * cpdef conv_forward(np.ndarray[float, ndim=4] z,             # <<<<<<<<<<<<<<
- *                    np.ndarray[float, ndim=4] K,
- *                    np.ndarray[float, ndim=1] b,
+ * cpdef conv_forward(np.ndarray[double, ndim=4] z,             # <<<<<<<<<<<<<<
+ *                    np.ndarray[double, ndim=4] K,
+ *                    np.ndarray[double, ndim=1] b,
  */
 struct __pyx_opt_args_2nn_7clayers_conv_forward {
   int __pyx_n;
@@ -1138,7 +1138,7 @@ struct __pyx_opt_args_2nn_7clayers_conv_forward {
 /* "nn/clayers.pyx":74
  * 
  * 
- * cpdef max_pooling_forward(np.ndarray[float, ndim=4] z,             # <<<<<<<<<<<<<<
+ * cpdef max_pooling_forward(np.ndarray[double, ndim=4] z,             # <<<<<<<<<<<<<<
  *                         tuple pooling,
  *                         tuple strides=(2, 2),
  */
@@ -1151,8 +1151,8 @@ struct __pyx_opt_args_2nn_7clayers_max_pooling_forward {
 /* "nn/clayers.pyx":112
  * 
  * 
- * cpdef max_pooling_backward(np.ndarray[float, ndim=4] next_dz,             # <<<<<<<<<<<<<<
- *                          np.ndarray[float, ndim=4] z,
+ * cpdef max_pooling_backward(np.ndarray[double, ndim=4] next_dz,             # <<<<<<<<<<<<<<
+ *                          np.ndarray[double, ndim=4] z,
  *                          tuple pooling,
  */
 struct __pyx_opt_args_2nn_7clayers_max_pooling_backward {
@@ -1742,7 +1742,7 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *, cha
 static PyObject *__pyx_f_2nn_7clayers_conv_forward(PyArrayObject *, PyArrayObject *, PyArrayObject *, int __pyx_skip_dispatch, struct __pyx_opt_args_2nn_7clayers_conv_forward *__pyx_optional_args); /*proto*/
 static PyObject *__pyx_f_2nn_7clayers_max_pooling_forward(PyArrayObject *, PyObject *, int __pyx_skip_dispatch, struct __pyx_opt_args_2nn_7clayers_max_pooling_forward *__pyx_optional_args); /*proto*/
 static PyObject *__pyx_f_2nn_7clayers_max_pooling_backward(PyArrayObject *, PyArrayObject *, PyObject *, int __pyx_skip_dispatch, struct __pyx_opt_args_2nn_7clayers_max_pooling_backward *__pyx_optional_args); /*proto*/
-static __Pyx_TypeInfo __Pyx_TypeInfo_float = { "float", NULL, sizeof(float), { 0 }, 0, 'R', 0, 0 };
+static __Pyx_TypeInfo __Pyx_TypeInfo_double = { "double", NULL, sizeof(double), { 0 }, 0, 'R', 0, 0 };
 #define __Pyx_MODULE_NAME "nn.clayers"
 extern int __pyx_module_is_main_nn__clayers;
 int __pyx_module_is_main_nn__clayers = 0;
@@ -1764,6 +1764,7 @@ static const char __pyx_k_sum[] = "sum";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
 static const char __pyx_k_test[] = "__test__";
+static const char __pyx_k_float[] = "float";
 static const char __pyx_k_numpy[] = "numpy";
 static const char __pyx_k_range[] = "range";
 static const char __pyx_k_zeros[] = "zeros";
@@ -1771,7 +1772,6 @@ static const char __pyx_k_arange[] = "arange";
 static const char __pyx_k_argmax[] = "argmax";
 static const char __pyx_k_astype[] = "astype";
 static const char __pyx_k_import[] = "__import__";
-static const char __pyx_k_float32[] = "float32";
 static const char __pyx_k_next_dz[] = "next_dz";
 static const char __pyx_k_padding[] = "padding";
 static const char __pyx_k_pooling[] = "pooling";
@@ -1810,7 +1810,7 @@ static PyObject *__pyx_n_s_b;
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_n_s_constant;
 static PyObject *__pyx_n_s_constant_values;
-static PyObject *__pyx_n_s_float32;
+static PyObject *__pyx_n_s_float;
 static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_lib;
 static PyObject *__pyx_n_s_main;
@@ -1864,17 +1864,17 @@ static PyObject *__pyx_codeobj__13;
 /* "nn/clayers.pyx":15
  * 
  * 
- * cpdef conv_forward(np.ndarray[float, ndim=4] z,             # <<<<<<<<<<<<<<
- *                    np.ndarray[float, ndim=4] K,
- *                    np.ndarray[float, ndim=1] b,
+ * cpdef conv_forward(np.ndarray[double, ndim=4] z,             # <<<<<<<<<<<<<<
+ *                    np.ndarray[double, ndim=4] K,
+ *                    np.ndarray[double, ndim=1] b,
  */
 
 static PyObject *__pyx_pw_2nn_7clayers_1conv_forward(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyObject *__pyx_f_2nn_7clayers_conv_forward(PyArrayObject *__pyx_v_z, PyArrayObject *__pyx_v_K, PyArrayObject *__pyx_v_b, CYTHON_UNUSED int __pyx_skip_dispatch, struct __pyx_opt_args_2nn_7clayers_conv_forward *__pyx_optional_args) {
 
   /* "nn/clayers.pyx":18
- *                    np.ndarray[float, ndim=4] K,
- *                    np.ndarray[float, ndim=1] b,
+ *                    np.ndarray[double, ndim=4] K,
+ *                    np.ndarray[double, ndim=1] b,
  *                    tuple padding=(0, 0),             # <<<<<<<<<<<<<<
  *                    tuple strides=(1, 1)):
  *     """
@@ -1882,7 +1882,7 @@ static PyObject *__pyx_f_2nn_7clayers_conv_forward(PyArrayObject *__pyx_v_z, PyA
   PyObject *__pyx_v_padding = ((PyObject*)__pyx_tuple_);
 
   /* "nn/clayers.pyx":19
- *                    np.ndarray[float, ndim=1] b,
+ *                    np.ndarray[double, ndim=1] b,
  *                    tuple padding=(0, 0),
  *                    tuple strides=(1, 1)):             # <<<<<<<<<<<<<<
  *     """
@@ -1940,7 +1940,7 @@ static PyObject *__pyx_f_2nn_7clayers_conv_forward(PyArrayObject *__pyx_v_z, PyA
   PyObject *__pyx_t_22 = NULL;
   size_t __pyx_t_23;
   int __pyx_t_24;
-  float __pyx_t_25;
+  double __pyx_t_25;
   size_t __pyx_t_26;
   size_t __pyx_t_27;
   size_t __pyx_t_28;
@@ -1976,24 +1976,24 @@ static PyObject *__pyx_f_2nn_7clayers_conv_forward(PyArrayObject *__pyx_v_z, PyA
   __pyx_pybuffernd_b.rcbuffer = &__pyx_pybuffer_b;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_z.rcbuffer->pybuffer, (PyObject*)__pyx_v_z, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 15, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_z.rcbuffer->pybuffer, (PyObject*)__pyx_v_z, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 15, __pyx_L1_error)
   }
   __pyx_pybuffernd_z.diminfo[0].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_z.diminfo[0].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_z.diminfo[1].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_z.diminfo[1].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_z.diminfo[2].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_z.diminfo[2].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[2]; __pyx_pybuffernd_z.diminfo[3].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[3]; __pyx_pybuffernd_z.diminfo[3].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[3];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_K.rcbuffer->pybuffer, (PyObject*)__pyx_v_K, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 15, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_K.rcbuffer->pybuffer, (PyObject*)__pyx_v_K, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 15, __pyx_L1_error)
   }
   __pyx_pybuffernd_K.diminfo[0].strides = __pyx_pybuffernd_K.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_K.diminfo[0].shape = __pyx_pybuffernd_K.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_K.diminfo[1].strides = __pyx_pybuffernd_K.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_K.diminfo[1].shape = __pyx_pybuffernd_K.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_K.diminfo[2].strides = __pyx_pybuffernd_K.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_K.diminfo[2].shape = __pyx_pybuffernd_K.rcbuffer->pybuffer.shape[2]; __pyx_pybuffernd_K.diminfo[3].strides = __pyx_pybuffernd_K.rcbuffer->pybuffer.strides[3]; __pyx_pybuffernd_K.diminfo[3].shape = __pyx_pybuffernd_K.rcbuffer->pybuffer.shape[3];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_b.rcbuffer->pybuffer, (PyObject*)__pyx_v_b, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 15, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_b.rcbuffer->pybuffer, (PyObject*)__pyx_v_b, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 15, __pyx_L1_error)
   }
   __pyx_pybuffernd_b.diminfo[0].strides = __pyx_pybuffernd_b.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_b.diminfo[0].shape = __pyx_pybuffernd_b.rcbuffer->pybuffer.shape[0];
 
   /* "nn/clayers.pyx":29
  *     :return:
  *     """
- *     cdef np.ndarray[float, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]),             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]),             # <<<<<<<<<<<<<<
  *                                                                  (padding[1], padding[1])), 'constant', constant_values=0)
  *     cdef unsigned int N = padding_z.shape[0]
  */
@@ -2028,7 +2028,7 @@ static PyObject *__pyx_f_2nn_7clayers_conv_forward(PyArrayObject *__pyx_v_z, PyA
 
   /* "nn/clayers.pyx":30
  *     """
- *     cdef np.ndarray[float, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]),
+ *     cdef np.ndarray[double, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]),
  *                                                                  (padding[1], padding[1])), 'constant', constant_values=0)             # <<<<<<<<<<<<<<
  *     cdef unsigned int N = padding_z.shape[0]
  *     cdef unsigned int height = padding_z.shape[2]
@@ -2057,7 +2057,7 @@ static PyObject *__pyx_f_2nn_7clayers_conv_forward(PyArrayObject *__pyx_v_z, PyA
   /* "nn/clayers.pyx":29
  *     :return:
  *     """
- *     cdef np.ndarray[float, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]),             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]),             # <<<<<<<<<<<<<<
  *                                                                  (padding[1], padding[1])), 'constant', constant_values=0)
  *     cdef unsigned int N = padding_z.shape[0]
  */
@@ -2089,7 +2089,7 @@ static PyObject *__pyx_f_2nn_7clayers_conv_forward(PyArrayObject *__pyx_v_z, PyA
 
   /* "nn/clayers.pyx":30
  *     """
- *     cdef np.ndarray[float, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]),
+ *     cdef np.ndarray[double, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]),
  *                                                                  (padding[1], padding[1])), 'constant', constant_values=0)             # <<<<<<<<<<<<<<
  *     cdef unsigned int N = padding_z.shape[0]
  *     cdef unsigned int height = padding_z.shape[2]
@@ -2101,7 +2101,7 @@ static PyObject *__pyx_f_2nn_7clayers_conv_forward(PyArrayObject *__pyx_v_z, PyA
   /* "nn/clayers.pyx":29
  *     :return:
  *     """
- *     cdef np.ndarray[float, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]),             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]),             # <<<<<<<<<<<<<<
  *                                                                  (padding[1], padding[1])), 'constant', constant_values=0)
  *     cdef unsigned int N = padding_z.shape[0]
  */
@@ -2114,7 +2114,7 @@ static PyObject *__pyx_f_2nn_7clayers_conv_forward(PyArrayObject *__pyx_v_z, PyA
   __pyx_t_6 = ((PyArrayObject *)__pyx_t_4);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_padding_z.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_padding_z.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) {
       __pyx_v_padding_z = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 29, __pyx_L1_error)
     } else {__pyx_pybuffernd_padding_z.diminfo[0].strides = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_padding_z.diminfo[0].shape = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_padding_z.diminfo[1].strides = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_padding_z.diminfo[1].shape = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_padding_z.diminfo[2].strides = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_padding_z.diminfo[2].shape = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.shape[2]; __pyx_pybuffernd_padding_z.diminfo[3].strides = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.strides[3]; __pyx_pybuffernd_padding_z.diminfo[3].shape = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.shape[3];
@@ -2125,7 +2125,7 @@ static PyObject *__pyx_f_2nn_7clayers_conv_forward(PyArrayObject *__pyx_v_z, PyA
   __pyx_t_4 = 0;
 
   /* "nn/clayers.pyx":31
- *     cdef np.ndarray[float, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]),
+ *     cdef np.ndarray[double, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]),
  *                                                                  (padding[1], padding[1])), 'constant', constant_values=0)
  *     cdef unsigned int N = padding_z.shape[0]             # <<<<<<<<<<<<<<
  *     cdef unsigned int height = padding_z.shape[2]
@@ -2226,7 +2226,7 @@ static PyObject *__pyx_f_2nn_7clayers_conv_forward(PyArrayObject *__pyx_v_z, PyA
  * 
  *     assert (height - k1) % s0 == 0, '1'             # <<<<<<<<<<<<<<
  *     assert (width - k2) % s1 == 0, '1'
- *     cdef np.ndarray[float, ndim= 4] conv_z = np.zeros((N, D, 1 + (height - k1) // s0, 1 + (width - k2) // s1)).astype(np.float32)
+ *     cdef np.ndarray[double, ndim= 4] conv_z = np.zeros((N, D, 1 + (height - k1) // s0, 1 + (width - k2) // s1)).astype(np.float)
  */
   #ifndef CYTHON_WITHOUT_ASSERTIONS
   if (unlikely(!Py_OptimizeFlag)) {
@@ -2246,7 +2246,7 @@ static PyObject *__pyx_f_2nn_7clayers_conv_forward(PyArrayObject *__pyx_v_z, PyA
  * 
  *     assert (height - k1) % s0 == 0, '1'
  *     assert (width - k2) % s1 == 0, '1'             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[float, ndim= 4] conv_z = np.zeros((N, D, 1 + (height - k1) // s0, 1 + (width - k2) // s1)).astype(np.float32)
+ *     cdef np.ndarray[double, ndim= 4] conv_z = np.zeros((N, D, 1 + (height - k1) // s0, 1 + (width - k2) // s1)).astype(np.float)
  *     cdef unsigned int n, d, h, w
  */
   #ifndef CYTHON_WITHOUT_ASSERTIONS
@@ -2266,7 +2266,7 @@ static PyObject *__pyx_f_2nn_7clayers_conv_forward(PyArrayObject *__pyx_v_z, PyA
   /* "nn/clayers.pyx":45
  *     assert (height - k1) % s0 == 0, '1'
  *     assert (width - k2) % s1 == 0, '1'
- *     cdef np.ndarray[float, ndim= 4] conv_z = np.zeros((N, D, 1 + (height - k1) // s0, 1 + (width - k2) // s1)).astype(np.float32)             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim= 4] conv_z = np.zeros((N, D, 1 + (height - k1) // s0, 1 + (width - k2) // s1)).astype(np.float)             # <<<<<<<<<<<<<<
  *     cdef unsigned int n, d, h, w
  *     for n in np.arange(N):
  */
@@ -2328,7 +2328,7 @@ static PyObject *__pyx_f_2nn_7clayers_conv_forward(PyArrayObject *__pyx_v_z, PyA
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_float32); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_float); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -2351,7 +2351,7 @@ static PyObject *__pyx_f_2nn_7clayers_conv_forward(PyArrayObject *__pyx_v_z, PyA
   __pyx_t_11 = ((PyArrayObject *)__pyx_t_4);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_conv_z.rcbuffer->pybuffer, (PyObject*)__pyx_t_11, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 4, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_conv_z.rcbuffer->pybuffer, (PyObject*)__pyx_t_11, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 4, 0, __pyx_stack) == -1)) {
       __pyx_v_conv_z = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_conv_z.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 45, __pyx_L1_error)
     } else {__pyx_pybuffernd_conv_z.diminfo[0].strides = __pyx_pybuffernd_conv_z.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_conv_z.diminfo[0].shape = __pyx_pybuffernd_conv_z.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_conv_z.diminfo[1].strides = __pyx_pybuffernd_conv_z.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_conv_z.diminfo[1].shape = __pyx_pybuffernd_conv_z.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_conv_z.diminfo[2].strides = __pyx_pybuffernd_conv_z.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_conv_z.diminfo[2].shape = __pyx_pybuffernd_conv_z.rcbuffer->pybuffer.shape[2]; __pyx_pybuffernd_conv_z.diminfo[3].strides = __pyx_pybuffernd_conv_z.rcbuffer->pybuffer.strides[3]; __pyx_pybuffernd_conv_z.diminfo[3].shape = __pyx_pybuffernd_conv_z.rcbuffer->pybuffer.shape[3];
@@ -2362,7 +2362,7 @@ static PyObject *__pyx_f_2nn_7clayers_conv_forward(PyArrayObject *__pyx_v_z, PyA
   __pyx_t_4 = 0;
 
   /* "nn/clayers.pyx":47
- *     cdef np.ndarray[float, ndim= 4] conv_z = np.zeros((N, D, 1 + (height - k1) // s0, 1 + (width - k2) // s1)).astype(np.float32)
+ *     cdef np.ndarray[double, ndim= 4] conv_z = np.zeros((N, D, 1 + (height - k1) // s0, 1 + (width - k2) // s1)).astype(np.float)
  *     cdef unsigned int n, d, h, w
  *     for n in np.arange(N):             # <<<<<<<<<<<<<<
  *         for d in np.arange(D):
@@ -2762,13 +2762,13 @@ static PyObject *__pyx_f_2nn_7clayers_conv_forward(PyArrayObject *__pyx_v_z, PyA
             __Pyx_RaiseBufferIndexError(__pyx_t_24);
             __PYX_ERR(0, 51, __pyx_L1_error)
           }
-          __pyx_t_3 = PyFloat_FromDouble((*__Pyx_BufPtrStrided1d(float *, __pyx_pybuffernd_b.rcbuffer->pybuffer.buf, __pyx_t_23, __pyx_pybuffernd_b.diminfo[0].strides))); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 51, __pyx_L1_error)
+          __pyx_t_3 = PyFloat_FromDouble((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_b.rcbuffer->pybuffer.buf, __pyx_t_23, __pyx_pybuffernd_b.diminfo[0].strides))); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 51, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
           __pyx_t_21 = PyNumber_Add(__pyx_t_8, __pyx_t_3); if (unlikely(!__pyx_t_21)) __PYX_ERR(0, 51, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_21);
           __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-          __pyx_t_25 = __pyx_PyFloat_AsFloat(__pyx_t_21); if (unlikely((__pyx_t_25 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 51, __pyx_L1_error)
+          __pyx_t_25 = __pyx_PyFloat_AsDouble(__pyx_t_21); if (unlikely((__pyx_t_25 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 51, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_21); __pyx_t_21 = 0;
           if (unlikely(__pyx_v_s0 == 0)) {
             PyErr_SetString(PyExc_ZeroDivisionError, "integer division or modulo by zero");
@@ -2791,7 +2791,7 @@ static PyObject *__pyx_f_2nn_7clayers_conv_forward(PyArrayObject *__pyx_v_z, PyA
             __Pyx_RaiseBufferIndexError(__pyx_t_24);
             __PYX_ERR(0, 51, __pyx_L1_error)
           }
-          *__Pyx_BufPtrStrided4d(float *, __pyx_pybuffernd_conv_z.rcbuffer->pybuffer.buf, __pyx_t_26, __pyx_pybuffernd_conv_z.diminfo[0].strides, __pyx_t_27, __pyx_pybuffernd_conv_z.diminfo[1].strides, __pyx_t_28, __pyx_pybuffernd_conv_z.diminfo[2].strides, __pyx_t_29, __pyx_pybuffernd_conv_z.diminfo[3].strides) = __pyx_t_25;
+          *__Pyx_BufPtrStrided4d(double *, __pyx_pybuffernd_conv_z.rcbuffer->pybuffer.buf, __pyx_t_26, __pyx_pybuffernd_conv_z.diminfo[0].strides, __pyx_t_27, __pyx_pybuffernd_conv_z.diminfo[1].strides, __pyx_t_28, __pyx_pybuffernd_conv_z.diminfo[2].strides, __pyx_t_29, __pyx_pybuffernd_conv_z.diminfo[3].strides) = __pyx_t_25;
 
           /* "nn/clayers.pyx":50
  *         for d in np.arange(D):
@@ -2824,7 +2824,7 @@ static PyObject *__pyx_f_2nn_7clayers_conv_forward(PyArrayObject *__pyx_v_z, PyA
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
     /* "nn/clayers.pyx":47
- *     cdef np.ndarray[float, ndim= 4] conv_z = np.zeros((N, D, 1 + (height - k1) // s0, 1 + (width - k2) // s1)).astype(np.float32)
+ *     cdef np.ndarray[double, ndim= 4] conv_z = np.zeros((N, D, 1 + (height - k1) // s0, 1 + (width - k2) // s1)).astype(np.float)
  *     cdef unsigned int n, d, h, w
  *     for n in np.arange(N):             # <<<<<<<<<<<<<<
  *         for d in np.arange(D):
@@ -2848,9 +2848,9 @@ static PyObject *__pyx_f_2nn_7clayers_conv_forward(PyArrayObject *__pyx_v_z, PyA
   /* "nn/clayers.pyx":15
  * 
  * 
- * cpdef conv_forward(np.ndarray[float, ndim=4] z,             # <<<<<<<<<<<<<<
- *                    np.ndarray[float, ndim=4] K,
- *                    np.ndarray[float, ndim=1] b,
+ * cpdef conv_forward(np.ndarray[double, ndim=4] z,             # <<<<<<<<<<<<<<
+ *                    np.ndarray[double, ndim=4] K,
+ *                    np.ndarray[double, ndim=1] b,
  */
 
   /* function exit code */
@@ -2910,8 +2910,8 @@ static PyObject *__pyx_pw_2nn_7clayers_1conv_forward(PyObject *__pyx_self, PyObj
     PyObject* values[5] = {0,0,0,0,0};
 
     /* "nn/clayers.pyx":18
- *                    np.ndarray[float, ndim=4] K,
- *                    np.ndarray[float, ndim=1] b,
+ *                    np.ndarray[double, ndim=4] K,
+ *                    np.ndarray[double, ndim=1] b,
  *                    tuple padding=(0, 0),             # <<<<<<<<<<<<<<
  *                    tuple strides=(1, 1)):
  *     """
@@ -2919,7 +2919,7 @@ static PyObject *__pyx_pw_2nn_7clayers_1conv_forward(PyObject *__pyx_self, PyObj
     values[3] = ((PyObject*)__pyx_tuple_);
 
     /* "nn/clayers.pyx":19
- *                    np.ndarray[float, ndim=1] b,
+ *                    np.ndarray[double, ndim=1] b,
  *                    tuple padding=(0, 0),
  *                    tuple strides=(1, 1)):             # <<<<<<<<<<<<<<
  *     """
@@ -3013,9 +3013,9 @@ static PyObject *__pyx_pw_2nn_7clayers_1conv_forward(PyObject *__pyx_self, PyObj
   /* "nn/clayers.pyx":15
  * 
  * 
- * cpdef conv_forward(np.ndarray[float, ndim=4] z,             # <<<<<<<<<<<<<<
- *                    np.ndarray[float, ndim=4] K,
- *                    np.ndarray[float, ndim=1] b,
+ * cpdef conv_forward(np.ndarray[double, ndim=4] z,             # <<<<<<<<<<<<<<
+ *                    np.ndarray[double, ndim=4] K,
+ *                    np.ndarray[double, ndim=1] b,
  */
 
   /* function exit code */
@@ -3053,17 +3053,17 @@ static PyObject *__pyx_pf_2nn_7clayers_conv_forward(CYTHON_UNUSED PyObject *__py
   __pyx_pybuffernd_b.rcbuffer = &__pyx_pybuffer_b;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_z.rcbuffer->pybuffer, (PyObject*)__pyx_v_z, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 15, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_z.rcbuffer->pybuffer, (PyObject*)__pyx_v_z, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 15, __pyx_L1_error)
   }
   __pyx_pybuffernd_z.diminfo[0].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_z.diminfo[0].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_z.diminfo[1].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_z.diminfo[1].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_z.diminfo[2].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_z.diminfo[2].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[2]; __pyx_pybuffernd_z.diminfo[3].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[3]; __pyx_pybuffernd_z.diminfo[3].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[3];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_K.rcbuffer->pybuffer, (PyObject*)__pyx_v_K, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 15, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_K.rcbuffer->pybuffer, (PyObject*)__pyx_v_K, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 15, __pyx_L1_error)
   }
   __pyx_pybuffernd_K.diminfo[0].strides = __pyx_pybuffernd_K.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_K.diminfo[0].shape = __pyx_pybuffernd_K.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_K.diminfo[1].strides = __pyx_pybuffernd_K.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_K.diminfo[1].shape = __pyx_pybuffernd_K.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_K.diminfo[2].strides = __pyx_pybuffernd_K.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_K.diminfo[2].shape = __pyx_pybuffernd_K.rcbuffer->pybuffer.shape[2]; __pyx_pybuffernd_K.diminfo[3].strides = __pyx_pybuffernd_K.rcbuffer->pybuffer.strides[3]; __pyx_pybuffernd_K.diminfo[3].shape = __pyx_pybuffernd_K.rcbuffer->pybuffer.shape[3];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_b.rcbuffer->pybuffer, (PyObject*)__pyx_v_b, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 15, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_b.rcbuffer->pybuffer, (PyObject*)__pyx_v_b, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 15, __pyx_L1_error)
   }
   __pyx_pybuffernd_b.diminfo[0].strides = __pyx_pybuffernd_b.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_b.diminfo[0].shape = __pyx_pybuffernd_b.rcbuffer->pybuffer.shape[0];
   __Pyx_XDECREF(__pyx_r);
@@ -3103,7 +3103,7 @@ static PyObject *__pyx_pf_2nn_7clayers_conv_forward(CYTHON_UNUSED PyObject *__py
 /* "nn/clayers.pyx":57
  * 
  * 
- * def _remove_padding(np.ndarray[float, ndim=4] z, tuple padding):             # <<<<<<<<<<<<<<
+ * def _remove_padding(np.ndarray[double, ndim=4] z, tuple padding):             # <<<<<<<<<<<<<<
  *     """
  *     padding
  */
@@ -3195,7 +3195,7 @@ static PyObject *__pyx_pf_2nn_7clayers_2_remove_padding(CYTHON_UNUSED PyObject *
   __pyx_pybuffernd_z.rcbuffer = &__pyx_pybuffer_z;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_z.rcbuffer->pybuffer, (PyObject*)__pyx_v_z, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 57, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_z.rcbuffer->pybuffer, (PyObject*)__pyx_v_z, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 57, __pyx_L1_error)
   }
   __pyx_pybuffernd_z.diminfo[0].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_z.diminfo[0].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_z.diminfo[1].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_z.diminfo[1].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_z.diminfo[2].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_z.diminfo[2].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[2]; __pyx_pybuffernd_z.diminfo[3].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[3]; __pyx_pybuffernd_z.diminfo[3].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[3];
 
@@ -3480,7 +3480,7 @@ static PyObject *__pyx_pf_2nn_7clayers_2_remove_padding(CYTHON_UNUSED PyObject *
   /* "nn/clayers.pyx":57
  * 
  * 
- * def _remove_padding(np.ndarray[float, ndim=4] z, tuple padding):             # <<<<<<<<<<<<<<
+ * def _remove_padding(np.ndarray[double, ndim=4] z, tuple padding):             # <<<<<<<<<<<<<<
  *     """
  *     padding
  */
@@ -3511,7 +3511,7 @@ static PyObject *__pyx_pf_2nn_7clayers_2_remove_padding(CYTHON_UNUSED PyObject *
 /* "nn/clayers.pyx":74
  * 
  * 
- * cpdef max_pooling_forward(np.ndarray[float, ndim=4] z,             # <<<<<<<<<<<<<<
+ * cpdef max_pooling_forward(np.ndarray[double, ndim=4] z,             # <<<<<<<<<<<<<<
  *                         tuple pooling,
  *                         tuple strides=(2, 2),
  */
@@ -3520,7 +3520,7 @@ static PyObject *__pyx_pw_2nn_7clayers_5max_pooling_forward(PyObject *__pyx_self
 static PyObject *__pyx_f_2nn_7clayers_max_pooling_forward(PyArrayObject *__pyx_v_z, PyObject *__pyx_v_pooling, CYTHON_UNUSED int __pyx_skip_dispatch, struct __pyx_opt_args_2nn_7clayers_max_pooling_forward *__pyx_optional_args) {
 
   /* "nn/clayers.pyx":76
- * cpdef max_pooling_forward(np.ndarray[float, ndim=4] z,
+ * cpdef max_pooling_forward(np.ndarray[double, ndim=4] z,
  *                         tuple pooling,
  *                         tuple strides=(2, 2),             # <<<<<<<<<<<<<<
  *                         tuple padding=(0, 0)):
@@ -3580,7 +3580,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_forward(PyArrayObject *__pyx_v
   PyObject *__pyx_t_22 = NULL;
   PyObject *__pyx_t_23 = NULL;
   PyObject *__pyx_t_24 = NULL;
-  float __pyx_t_25;
+  double __pyx_t_25;
   size_t __pyx_t_26;
   size_t __pyx_t_27;
   size_t __pyx_t_28;
@@ -3609,7 +3609,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_forward(PyArrayObject *__pyx_v
   __pyx_pybuffernd_z.rcbuffer = &__pyx_pybuffer_z;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_z.rcbuffer->pybuffer, (PyObject*)__pyx_v_z, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 74, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_z.rcbuffer->pybuffer, (PyObject*)__pyx_v_z, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 74, __pyx_L1_error)
   }
   __pyx_pybuffernd_z.diminfo[0].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_z.diminfo[0].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_z.diminfo[1].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_z.diminfo[1].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_z.diminfo[2].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_z.diminfo[2].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[2]; __pyx_pybuffernd_z.diminfo[3].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[3]; __pyx_pybuffernd_z.diminfo[3].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[3];
 
@@ -3645,14 +3645,14 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_forward(PyArrayObject *__pyx_v
  *     cdef unsigned int H = z.shape[2]
  *     cdef unsigned int W = z.shape[3]             # <<<<<<<<<<<<<<
  *     #
- *     cdef np.ndarray[float, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),
+ *     cdef np.ndarray[double, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),
  */
   __pyx_v_W = (__pyx_v_z->dimensions[3]);
 
   /* "nn/clayers.pyx":91
  *     cdef unsigned int W = z.shape[3]
  *     #
- *     cdef np.ndarray[float, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),             # <<<<<<<<<<<<<<
  *                                                                  (padding[0], padding[0]), (padding[1], padding[1])),
  *                                                              'constant', constant_values=0)
  */
@@ -3667,7 +3667,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_forward(PyArrayObject *__pyx_v
 
   /* "nn/clayers.pyx":92
  *     #
- *     cdef np.ndarray[float, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),
+ *     cdef np.ndarray[double, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),
  *                                                                  (padding[0], padding[0]), (padding[1], padding[1])),             # <<<<<<<<<<<<<<
  *                                                              'constant', constant_values=0)
  * 
@@ -3716,7 +3716,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_forward(PyArrayObject *__pyx_v
   /* "nn/clayers.pyx":91
  *     cdef unsigned int W = z.shape[3]
  *     #
- *     cdef np.ndarray[float, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),             # <<<<<<<<<<<<<<
  *                                                                  (padding[0], padding[0]), (padding[1], padding[1])),
  *                                                              'constant', constant_values=0)
  */
@@ -3747,7 +3747,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_forward(PyArrayObject *__pyx_v
   __pyx_t_2 = 0;
 
   /* "nn/clayers.pyx":93
- *     cdef np.ndarray[float, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),
+ *     cdef np.ndarray[double, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),
  *                                                                  (padding[0], padding[0]), (padding[1], padding[1])),
  *                                                              'constant', constant_values=0)             # <<<<<<<<<<<<<<
  * 
@@ -3760,7 +3760,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_forward(PyArrayObject *__pyx_v
   /* "nn/clayers.pyx":91
  *     cdef unsigned int W = z.shape[3]
  *     #
- *     cdef np.ndarray[float, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim= 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),             # <<<<<<<<<<<<<<
  *                                                                  (padding[0], padding[0]), (padding[1], padding[1])),
  *                                                              'constant', constant_values=0)
  */
@@ -3773,7 +3773,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_forward(PyArrayObject *__pyx_v
   __pyx_t_6 = ((PyArrayObject *)__pyx_t_4);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_padding_z.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_padding_z.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) {
       __pyx_v_padding_z = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 91, __pyx_L1_error)
     } else {__pyx_pybuffernd_padding_z.diminfo[0].strides = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_padding_z.diminfo[0].shape = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_padding_z.diminfo[1].strides = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_padding_z.diminfo[1].shape = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_padding_z.diminfo[2].strides = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_padding_z.diminfo[2].shape = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.shape[2]; __pyx_pybuffernd_padding_z.diminfo[3].strides = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.strides[3]; __pyx_pybuffernd_padding_z.diminfo[3].shape = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.shape[3];
@@ -3837,7 +3837,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_forward(PyArrayObject *__pyx_v
  *     cdef unsigned int out_h = (H + 2 * padding[0] - pooling[0]) // strides[0] + 1
  *     cdef unsigned int out_w = (W + 2 * padding[1] - pooling[1]) // strides[1] + 1             # <<<<<<<<<<<<<<
  * 
- *     cdef np.ndarray[float, ndim= 4] pool_z = np.zeros((N, C, out_h, out_w)).astype(np.float32)
+ *     cdef np.ndarray[double, ndim= 4] pool_z = np.zeros((N, C, out_h, out_w)).astype(np.float)
  */
   __pyx_t_5 = __Pyx_PyInt_From_unsigned_int(__pyx_v_W); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
@@ -3884,7 +3884,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_forward(PyArrayObject *__pyx_v
   /* "nn/clayers.pyx":99
  *     cdef unsigned int out_w = (W + 2 * padding[1] - pooling[1]) // strides[1] + 1
  * 
- *     cdef np.ndarray[float, ndim= 4] pool_z = np.zeros((N, C, out_h, out_w)).astype(np.float32)             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim= 4] pool_z = np.zeros((N, C, out_h, out_w)).astype(np.float)             # <<<<<<<<<<<<<<
  * 
  *     cdef unsigned int n, c, i, j
  */
@@ -3936,7 +3936,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_forward(PyArrayObject *__pyx_v
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 99, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_float32); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 99, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_float); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 99, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -3959,7 +3959,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_forward(PyArrayObject *__pyx_v
   __pyx_t_11 = ((PyArrayObject *)__pyx_t_4);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_pool_z.rcbuffer->pybuffer, (PyObject*)__pyx_t_11, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 4, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_pool_z.rcbuffer->pybuffer, (PyObject*)__pyx_t_11, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 4, 0, __pyx_stack) == -1)) {
       __pyx_v_pool_z = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_pool_z.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 99, __pyx_L1_error)
     } else {__pyx_pybuffernd_pool_z.diminfo[0].strides = __pyx_pybuffernd_pool_z.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_pool_z.diminfo[0].shape = __pyx_pybuffernd_pool_z.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_pool_z.diminfo[1].strides = __pyx_pybuffernd_pool_z.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_pool_z.diminfo[1].shape = __pyx_pybuffernd_pool_z.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_pool_z.diminfo[2].strides = __pyx_pybuffernd_pool_z.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_pool_z.diminfo[2].shape = __pyx_pybuffernd_pool_z.rcbuffer->pybuffer.shape[2]; __pyx_pybuffernd_pool_z.diminfo[3].strides = __pyx_pybuffernd_pool_z.rcbuffer->pybuffer.strides[3]; __pyx_pybuffernd_pool_z.diminfo[3].shape = __pyx_pybuffernd_pool_z.rcbuffer->pybuffer.shape[3];
@@ -4422,7 +4422,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_forward(PyArrayObject *__pyx_v
           if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 106, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-          __pyx_t_25 = __pyx_PyFloat_AsFloat(__pyx_t_4); if (unlikely((__pyx_t_25 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 106, __pyx_L1_error)
+          __pyx_t_25 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_25 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 106, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
           __pyx_t_26 = __pyx_v_n;
           __pyx_t_27 = __pyx_v_c;
@@ -4437,7 +4437,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_forward(PyArrayObject *__pyx_v
             __Pyx_RaiseBufferIndexError(__pyx_t_30);
             __PYX_ERR(0, 106, __pyx_L1_error)
           }
-          *__Pyx_BufPtrStrided4d(float *, __pyx_pybuffernd_pool_z.rcbuffer->pybuffer.buf, __pyx_t_26, __pyx_pybuffernd_pool_z.diminfo[0].strides, __pyx_t_27, __pyx_pybuffernd_pool_z.diminfo[1].strides, __pyx_t_28, __pyx_pybuffernd_pool_z.diminfo[2].strides, __pyx_t_29, __pyx_pybuffernd_pool_z.diminfo[3].strides) = __pyx_t_25;
+          *__Pyx_BufPtrStrided4d(double *, __pyx_pybuffernd_pool_z.rcbuffer->pybuffer.buf, __pyx_t_26, __pyx_pybuffernd_pool_z.diminfo[0].strides, __pyx_t_27, __pyx_pybuffernd_pool_z.diminfo[1].strides, __pyx_t_28, __pyx_pybuffernd_pool_z.diminfo[2].strides, __pyx_t_29, __pyx_pybuffernd_pool_z.diminfo[3].strides) = __pyx_t_25;
 
           /* "nn/clayers.pyx":105
  *         for c in np.arange(C):
@@ -4494,7 +4494,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_forward(PyArrayObject *__pyx_v
   /* "nn/clayers.pyx":74
  * 
  * 
- * cpdef max_pooling_forward(np.ndarray[float, ndim=4] z,             # <<<<<<<<<<<<<<
+ * cpdef max_pooling_forward(np.ndarray[double, ndim=4] z,             # <<<<<<<<<<<<<<
  *                         tuple pooling,
  *                         tuple strides=(2, 2),
  */
@@ -4553,7 +4553,7 @@ static PyObject *__pyx_pw_2nn_7clayers_5max_pooling_forward(PyObject *__pyx_self
     PyObject* values[4] = {0,0,0,0};
 
     /* "nn/clayers.pyx":76
- * cpdef max_pooling_forward(np.ndarray[float, ndim=4] z,
+ * cpdef max_pooling_forward(np.ndarray[double, ndim=4] z,
  *                         tuple pooling,
  *                         tuple strides=(2, 2),             # <<<<<<<<<<<<<<
  *                         tuple padding=(0, 0)):
@@ -4645,7 +4645,7 @@ static PyObject *__pyx_pw_2nn_7clayers_5max_pooling_forward(PyObject *__pyx_self
   /* "nn/clayers.pyx":74
  * 
  * 
- * cpdef max_pooling_forward(np.ndarray[float, ndim=4] z,             # <<<<<<<<<<<<<<
+ * cpdef max_pooling_forward(np.ndarray[double, ndim=4] z,             # <<<<<<<<<<<<<<
  *                         tuple pooling,
  *                         tuple strides=(2, 2),
  */
@@ -4673,7 +4673,7 @@ static PyObject *__pyx_pf_2nn_7clayers_4max_pooling_forward(CYTHON_UNUSED PyObje
   __pyx_pybuffernd_z.rcbuffer = &__pyx_pybuffer_z;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_z.rcbuffer->pybuffer, (PyObject*)__pyx_v_z, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 74, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_z.rcbuffer->pybuffer, (PyObject*)__pyx_v_z, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 74, __pyx_L1_error)
   }
   __pyx_pybuffernd_z.diminfo[0].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_z.diminfo[0].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_z.diminfo[1].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_z.diminfo[1].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_z.diminfo[2].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_z.diminfo[2].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[2]; __pyx_pybuffernd_z.diminfo[3].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[3]; __pyx_pybuffernd_z.diminfo[3].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[3];
   __Pyx_XDECREF(__pyx_r);
@@ -4709,8 +4709,8 @@ static PyObject *__pyx_pf_2nn_7clayers_4max_pooling_forward(CYTHON_UNUSED PyObje
 /* "nn/clayers.pyx":112
  * 
  * 
- * cpdef max_pooling_backward(np.ndarray[float, ndim=4] next_dz,             # <<<<<<<<<<<<<<
- *                          np.ndarray[float, ndim=4] z,
+ * cpdef max_pooling_backward(np.ndarray[double, ndim=4] next_dz,             # <<<<<<<<<<<<<<
+ *                          np.ndarray[double, ndim=4] z,
  *                          tuple pooling,
  */
 
@@ -4718,7 +4718,7 @@ static PyObject *__pyx_pw_2nn_7clayers_7max_pooling_backward(PyObject *__pyx_sel
 static PyObject *__pyx_f_2nn_7clayers_max_pooling_backward(PyArrayObject *__pyx_v_next_dz, PyArrayObject *__pyx_v_z, PyObject *__pyx_v_pooling, CYTHON_UNUSED int __pyx_skip_dispatch, struct __pyx_opt_args_2nn_7clayers_max_pooling_backward *__pyx_optional_args) {
 
   /* "nn/clayers.pyx":115
- *                          np.ndarray[float, ndim=4] z,
+ *                          np.ndarray[double, ndim=4] z,
  *                          tuple pooling,
  *                          tuple strides=(2, 2),             # <<<<<<<<<<<<<<
  *                          tuple padding=(0, 0)):
@@ -4815,12 +4815,12 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_backward(PyArrayObject *__pyx_
   __pyx_pybuffernd_z.rcbuffer = &__pyx_pybuffer_z;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_next_dz.rcbuffer->pybuffer, (PyObject*)__pyx_v_next_dz, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 112, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_next_dz.rcbuffer->pybuffer, (PyObject*)__pyx_v_next_dz, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 112, __pyx_L1_error)
   }
   __pyx_pybuffernd_next_dz.diminfo[0].strides = __pyx_pybuffernd_next_dz.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_next_dz.diminfo[0].shape = __pyx_pybuffernd_next_dz.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_next_dz.diminfo[1].strides = __pyx_pybuffernd_next_dz.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_next_dz.diminfo[1].shape = __pyx_pybuffernd_next_dz.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_next_dz.diminfo[2].strides = __pyx_pybuffernd_next_dz.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_next_dz.diminfo[2].shape = __pyx_pybuffernd_next_dz.rcbuffer->pybuffer.shape[2]; __pyx_pybuffernd_next_dz.diminfo[3].strides = __pyx_pybuffernd_next_dz.rcbuffer->pybuffer.strides[3]; __pyx_pybuffernd_next_dz.diminfo[3].shape = __pyx_pybuffernd_next_dz.rcbuffer->pybuffer.shape[3];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_z.rcbuffer->pybuffer, (PyObject*)__pyx_v_z, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 112, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_z.rcbuffer->pybuffer, (PyObject*)__pyx_v_z, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 112, __pyx_L1_error)
   }
   __pyx_pybuffernd_z.diminfo[0].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_z.diminfo[0].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_z.diminfo[1].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_z.diminfo[1].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_z.diminfo[2].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_z.diminfo[2].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[2]; __pyx_pybuffernd_z.diminfo[3].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[3]; __pyx_pybuffernd_z.diminfo[3].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[3];
 
@@ -4874,14 +4874,14 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_backward(PyArrayObject *__pyx_
  *     cdef unsigned int out_h = next_dz.shape[2]
  *     cdef unsigned int out_w = next_dz.shape[3]             # <<<<<<<<<<<<<<
  *     #
- *     cdef np.ndarray[float, ndim = 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),
+ *     cdef np.ndarray[double, ndim = 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),
  */
   __pyx_v_out_w = (__pyx_v_next_dz->dimensions[3]);
 
   /* "nn/clayers.pyx":133
  *     cdef unsigned int out_w = next_dz.shape[3]
  *     #
- *     cdef np.ndarray[float, ndim = 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim = 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),             # <<<<<<<<<<<<<<
  *                                                                 (padding[0], padding[0]),
  *                                                                 (padding[1], padding[1])),
  */
@@ -4896,7 +4896,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_backward(PyArrayObject *__pyx_
 
   /* "nn/clayers.pyx":134
  *     #
- *     cdef np.ndarray[float, ndim = 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),
+ *     cdef np.ndarray[double, ndim = 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),
  *                                                                 (padding[0], padding[0]),             # <<<<<<<<<<<<<<
  *                                                                 (padding[1], padding[1])),
  *                                                             'constant', constant_values=0)
@@ -4923,7 +4923,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_backward(PyArrayObject *__pyx_
   __pyx_t_3 = 0;
 
   /* "nn/clayers.pyx":135
- *     cdef np.ndarray[float, ndim = 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),
+ *     cdef np.ndarray[double, ndim = 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),
  *                                                                 (padding[0], padding[0]),
  *                                                                 (padding[1], padding[1])),             # <<<<<<<<<<<<<<
  *                                                             'constant', constant_values=0)
@@ -4953,7 +4953,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_backward(PyArrayObject *__pyx_
   /* "nn/clayers.pyx":133
  *     cdef unsigned int out_w = next_dz.shape[3]
  *     #
- *     cdef np.ndarray[float, ndim = 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim = 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),             # <<<<<<<<<<<<<<
  *                                                                 (padding[0], padding[0]),
  *                                                                 (padding[1], padding[1])),
  */
@@ -4988,7 +4988,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_backward(PyArrayObject *__pyx_
  *                                                                 (padding[1], padding[1])),
  *                                                             'constant', constant_values=0)             # <<<<<<<<<<<<<<
  *     #
- *     cdef np.ndarray[float, ndim = 4] padding_dz = np.zeros_like(padding_z).astype(np.float32)
+ *     cdef np.ndarray[double, ndim = 4] padding_dz = np.zeros_like(padding_z).astype(np.float)
  */
   __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 136, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -4997,7 +4997,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_backward(PyArrayObject *__pyx_
   /* "nn/clayers.pyx":133
  *     cdef unsigned int out_w = next_dz.shape[3]
  *     #
- *     cdef np.ndarray[float, ndim = 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim = 4] padding_z = np.lib.pad(z, ((0, 0), (0, 0),             # <<<<<<<<<<<<<<
  *                                                                 (padding[0], padding[0]),
  *                                                                 (padding[1], padding[1])),
  */
@@ -5010,7 +5010,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_backward(PyArrayObject *__pyx_
   __pyx_t_6 = ((PyArrayObject *)__pyx_t_4);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_padding_z.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_padding_z.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) {
       __pyx_v_padding_z = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 133, __pyx_L1_error)
     } else {__pyx_pybuffernd_padding_z.diminfo[0].strides = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_padding_z.diminfo[0].shape = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_padding_z.diminfo[1].strides = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_padding_z.diminfo[1].shape = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_padding_z.diminfo[2].strides = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_padding_z.diminfo[2].shape = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.shape[2]; __pyx_pybuffernd_padding_z.diminfo[3].strides = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.strides[3]; __pyx_pybuffernd_padding_z.diminfo[3].shape = __pyx_pybuffernd_padding_z.rcbuffer->pybuffer.shape[3];
@@ -5023,7 +5023,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_backward(PyArrayObject *__pyx_
   /* "nn/clayers.pyx":138
  *                                                             'constant', constant_values=0)
  *     #
- *     cdef np.ndarray[float, ndim = 4] padding_dz = np.zeros_like(padding_z).astype(np.float32)             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim = 4] padding_dz = np.zeros_like(padding_z).astype(np.float)             # <<<<<<<<<<<<<<
  * 
  *     cdef unsigned int n, c, i, j
  */
@@ -5052,7 +5052,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_backward(PyArrayObject *__pyx_
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 138, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_float32); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 138, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_float); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 138, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -5075,7 +5075,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_backward(PyArrayObject *__pyx_
   __pyx_t_7 = ((PyArrayObject *)__pyx_t_4);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_padding_dz.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_padding_dz.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) {
       __pyx_v_padding_dz = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_padding_dz.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 138, __pyx_L1_error)
     } else {__pyx_pybuffernd_padding_dz.diminfo[0].strides = __pyx_pybuffernd_padding_dz.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_padding_dz.diminfo[0].shape = __pyx_pybuffernd_padding_dz.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_padding_dz.diminfo[1].strides = __pyx_pybuffernd_padding_dz.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_padding_dz.diminfo[1].shape = __pyx_pybuffernd_padding_dz.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_padding_dz.diminfo[2].strides = __pyx_pybuffernd_padding_dz.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_padding_dz.diminfo[2].shape = __pyx_pybuffernd_padding_dz.rcbuffer->pybuffer.shape[2]; __pyx_pybuffernd_padding_dz.diminfo[3].strides = __pyx_pybuffernd_padding_dz.rcbuffer->pybuffer.strides[3]; __pyx_pybuffernd_padding_dz.diminfo[3].shape = __pyx_pybuffernd_padding_dz.rcbuffer->pybuffer.shape[3];
@@ -5651,7 +5651,7 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_backward(PyArrayObject *__pyx_
             __Pyx_RaiseBufferIndexError(__pyx_t_29);
             __PYX_ERR(0, 151, __pyx_L1_error)
           }
-          __pyx_t_4 = PyFloat_FromDouble((*__Pyx_BufPtrStrided4d(float *, __pyx_pybuffernd_next_dz.rcbuffer->pybuffer.buf, __pyx_t_25, __pyx_pybuffernd_next_dz.diminfo[0].strides, __pyx_t_26, __pyx_pybuffernd_next_dz.diminfo[1].strides, __pyx_t_27, __pyx_pybuffernd_next_dz.diminfo[2].strides, __pyx_t_28, __pyx_pybuffernd_next_dz.diminfo[3].strides))); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 151, __pyx_L1_error)
+          __pyx_t_4 = PyFloat_FromDouble((*__Pyx_BufPtrStrided4d(double *, __pyx_pybuffernd_next_dz.rcbuffer->pybuffer.buf, __pyx_t_25, __pyx_pybuffernd_next_dz.diminfo[0].strides, __pyx_t_26, __pyx_pybuffernd_next_dz.diminfo[1].strides, __pyx_t_27, __pyx_pybuffernd_next_dz.diminfo[2].strides, __pyx_t_28, __pyx_pybuffernd_next_dz.diminfo[3].strides))); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 151, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           __pyx_t_22 = PyNumber_InPlaceAdd(__pyx_t_16, __pyx_t_4); if (unlikely(!__pyx_t_22)) __PYX_ERR(0, 151, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_22);
@@ -5761,8 +5761,8 @@ static PyObject *__pyx_f_2nn_7clayers_max_pooling_backward(PyArrayObject *__pyx_
   /* "nn/clayers.pyx":112
  * 
  * 
- * cpdef max_pooling_backward(np.ndarray[float, ndim=4] next_dz,             # <<<<<<<<<<<<<<
- *                          np.ndarray[float, ndim=4] z,
+ * cpdef max_pooling_backward(np.ndarray[double, ndim=4] next_dz,             # <<<<<<<<<<<<<<
+ *                          np.ndarray[double, ndim=4] z,
  *                          tuple pooling,
  */
 
@@ -5826,7 +5826,7 @@ static PyObject *__pyx_pw_2nn_7clayers_7max_pooling_backward(PyObject *__pyx_sel
     PyObject* values[5] = {0,0,0,0,0};
 
     /* "nn/clayers.pyx":115
- *                          np.ndarray[float, ndim=4] z,
+ *                          np.ndarray[double, ndim=4] z,
  *                          tuple pooling,
  *                          tuple strides=(2, 2),             # <<<<<<<<<<<<<<
  *                          tuple padding=(0, 0)):
@@ -5929,8 +5929,8 @@ static PyObject *__pyx_pw_2nn_7clayers_7max_pooling_backward(PyObject *__pyx_sel
   /* "nn/clayers.pyx":112
  * 
  * 
- * cpdef max_pooling_backward(np.ndarray[float, ndim=4] next_dz,             # <<<<<<<<<<<<<<
- *                          np.ndarray[float, ndim=4] z,
+ * cpdef max_pooling_backward(np.ndarray[double, ndim=4] next_dz,             # <<<<<<<<<<<<<<
+ *                          np.ndarray[double, ndim=4] z,
  *                          tuple pooling,
  */
 
@@ -5963,12 +5963,12 @@ static PyObject *__pyx_pf_2nn_7clayers_6max_pooling_backward(CYTHON_UNUSED PyObj
   __pyx_pybuffernd_z.rcbuffer = &__pyx_pybuffer_z;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_next_dz.rcbuffer->pybuffer, (PyObject*)__pyx_v_next_dz, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 112, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_next_dz.rcbuffer->pybuffer, (PyObject*)__pyx_v_next_dz, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 112, __pyx_L1_error)
   }
   __pyx_pybuffernd_next_dz.diminfo[0].strides = __pyx_pybuffernd_next_dz.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_next_dz.diminfo[0].shape = __pyx_pybuffernd_next_dz.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_next_dz.diminfo[1].strides = __pyx_pybuffernd_next_dz.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_next_dz.diminfo[1].shape = __pyx_pybuffernd_next_dz.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_next_dz.diminfo[2].strides = __pyx_pybuffernd_next_dz.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_next_dz.diminfo[2].shape = __pyx_pybuffernd_next_dz.rcbuffer->pybuffer.shape[2]; __pyx_pybuffernd_next_dz.diminfo[3].strides = __pyx_pybuffernd_next_dz.rcbuffer->pybuffer.strides[3]; __pyx_pybuffernd_next_dz.diminfo[3].shape = __pyx_pybuffernd_next_dz.rcbuffer->pybuffer.shape[3];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_z.rcbuffer->pybuffer, (PyObject*)__pyx_v_z, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 112, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_z.rcbuffer->pybuffer, (PyObject*)__pyx_v_z, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 4, 0, __pyx_stack) == -1)) __PYX_ERR(0, 112, __pyx_L1_error)
   }
   __pyx_pybuffernd_z.diminfo[0].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_z.diminfo[0].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_z.diminfo[1].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_z.diminfo[1].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_z.diminfo[2].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_z.diminfo[2].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[2]; __pyx_pybuffernd_z.diminfo[3].strides = __pyx_pybuffernd_z.rcbuffer->pybuffer.strides[3]; __pyx_pybuffernd_z.diminfo[3].shape = __pyx_pybuffernd_z.rcbuffer->pybuffer.shape[3];
   __Pyx_XDECREF(__pyx_r);
@@ -8485,7 +8485,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {&__pyx_n_s_constant, __pyx_k_constant, sizeof(__pyx_k_constant), 0, 0, 1, 1},
   {&__pyx_n_s_constant_values, __pyx_k_constant_values, sizeof(__pyx_k_constant_values), 0, 0, 1, 1},
-  {&__pyx_n_s_float32, __pyx_k_float32, sizeof(__pyx_k_float32), 0, 0, 1, 1},
+  {&__pyx_n_s_float, __pyx_k_float, sizeof(__pyx_k_float), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_lib, __pyx_k_lib, sizeof(__pyx_k_lib), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
@@ -8529,8 +8529,8 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
   /* "nn/clayers.pyx":18
- *                    np.ndarray[float, ndim=4] K,
- *                    np.ndarray[float, ndim=1] b,
+ *                    np.ndarray[double, ndim=4] K,
+ *                    np.ndarray[double, ndim=1] b,
  *                    tuple padding=(0, 0),             # <<<<<<<<<<<<<<
  *                    tuple strides=(1, 1)):
  *     """
@@ -8540,7 +8540,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple_);
 
   /* "nn/clayers.pyx":19
- *                    np.ndarray[float, ndim=1] b,
+ *                    np.ndarray[double, ndim=1] b,
  *                    tuple padding=(0, 0),
  *                    tuple strides=(1, 1)):             # <<<<<<<<<<<<<<
  *     """
@@ -8562,7 +8562,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_slice__3);
 
   /* "nn/clayers.pyx":76
- * cpdef max_pooling_forward(np.ndarray[float, ndim=4] z,
+ * cpdef max_pooling_forward(np.ndarray[double, ndim=4] z,
  *                         tuple pooling,
  *                         tuple strides=(2, 2),             # <<<<<<<<<<<<<<
  *                         tuple padding=(0, 0)):
@@ -8652,7 +8652,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   /* "nn/clayers.pyx":57
  * 
  * 
- * def _remove_padding(np.ndarray[float, ndim=4] z, tuple padding):             # <<<<<<<<<<<<<<
+ * def _remove_padding(np.ndarray[double, ndim=4] z, tuple padding):             # <<<<<<<<<<<<<<
  *     """
  *     padding
  */
@@ -8982,7 +8982,7 @@ if (!__Pyx_RefNanny) {
   /* "nn/clayers.pyx":57
  * 
  * 
- * def _remove_padding(np.ndarray[float, ndim=4] z, tuple padding):             # <<<<<<<<<<<<<<
+ * def _remove_padding(np.ndarray[double, ndim=4] z, tuple padding):             # <<<<<<<<<<<<<<
  *     """
  *     padding
  */

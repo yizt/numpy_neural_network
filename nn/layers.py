@@ -8,6 +8,7 @@ Created on 2018/8/19 15:03
 """
 import numpy as np
 import pyximport
+
 pyximport.install()
 from clayers import conv_forward
 
@@ -87,7 +88,8 @@ def conv_forward_bak(z, K, b, padding=(0, 0), strides=(1, 1)):
     :param strides: 步长
     :return: 卷积结果
     """
-    padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]), (padding[1], padding[1])), 'constant', constant_values=0)
+    padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]), (padding[1], padding[1])), 'constant',
+                           constant_values=0)
     N, _, height, width = padding_z.shape
     C, D, k1, k2 = K.shape
     assert (height - k1) % strides[0] == 0, '步长不为1时，步长必须刚好能够被整除'
@@ -97,7 +99,8 @@ def conv_forward_bak(z, K, b, padding=(0, 0), strides=(1, 1)):
         for d in np.arange(D):
             for h in np.arange(height - k1 + 1)[::strides[0]]:
                 for w in np.arange(width - k2 + 1)[::strides[1]]:
-                    conv_z[n, d, h // strides[0], w // strides[1]] = np.sum(padding_z[n, :, h:h + k1, w:w + k2] * K[:, d]) + b[d]
+                    conv_z[n, d, h // strides[0], w // strides[1]] = np.sum(
+                        padding_z[n, :, h:h + k1, w:w + k2] * K[:, d]) + b[d]
     return conv_z
 
 
@@ -143,14 +146,15 @@ def conv_backward(next_dz, K, z, padding=(0, 0), strides=(1, 1)):
     # 交换C,D为D,C；D变为输入通道数了，C变为输出通道数了
     swap_flip_K = np.swapaxes(flip_K, 0, 1)
     # 增加高度和宽度0填充
-    ppadding_next_dz = np.lib.pad(padding_next_dz, ((0, 0), (0, 0), (k1 - 1, k1 - 1), (k2 - 1, k2 - 1)), 'constant', constant_values=0)
+    ppadding_next_dz = np.lib.pad(padding_next_dz, ((0, 0), (0, 0), (k1 - 1, k1 - 1), (k2 - 1, k2 - 1)), 'constant',
+                                  constant_values=0)
     dz = conv_forward(ppadding_next_dz,
                       swap_flip_K,
-                      np.zeros((C,), dtype=np.float32))
+                      np.zeros((C,), dtype=np.float))
 
     # 求卷积和的梯度dK
     swap_z = np.swapaxes(z, 0, 1)  # 变为(C,N,H,W)与
-    dK = conv_forward(swap_z, padding_next_dz, np.zeros((D,), dtype=np.float32))
+    dK = conv_forward(swap_z, padding_next_dz, np.zeros((D,), dtype=np.float))
 
     # 偏置的梯度
     db = np.sum(np.sum(np.sum(next_dz, axis=-1), axis=-1), axis=0)  # 在高度、宽度上相加；批量大小上相加
@@ -172,21 +176,22 @@ def max_pooling_forward_bak(z, pooling, strides=(2, 2), padding=(0, 0)):
     """
     N, C, H, W = z.shape
     # 零填充
-    padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]), (padding[1], padding[1])), 'constant', constant_values=0)
+    padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]), (padding[1], padding[1])), 'constant',
+                           constant_values=0)
 
     # 输出的高度和宽度
     out_h = (H + 2 * padding[0] - pooling[0]) // strides[0] + 1
     out_w = (W + 2 * padding[1] - pooling[1]) // strides[1] + 1
 
-    pool_z = np.zeros((N, C, out_h, out_w),dtype=np.float32)
+    pool_z = np.zeros((N, C, out_h, out_w), dtype=np.float32)
 
     for n in np.arange(N):
         for c in np.arange(C):
             for i in np.arange(out_h):
                 for j in np.arange(out_w):
                     pool_z[n, c, i, j] = np.max(padding_z[n, c,
-                                                          strides[0] * i:strides[0] * i + pooling[0],
-                                                          strides[1] * j:strides[1] * j + pooling[1]])
+                                                strides[0] * i:strides[0] * i + pooling[0],
+                                                strides[1] * j:strides[1] * j + pooling[1]])
     return pool_z
 
 
@@ -214,8 +219,8 @@ def max_pooling_backward_bak(next_dz, z, pooling, strides=(2, 2), padding=(0, 0)
                 for j in np.arange(out_w):
                     # 找到最大值的那个元素坐标，将梯度传给这个坐标
                     flat_idx = np.argmax(padding_z[n, c,
-                                                   strides[0] * i:strides[0] * i + pooling[0],
-                                                   strides[1] * j:strides[1] * j + pooling[1]])
+                                         strides[0] * i:strides[0] * i + pooling[0],
+                                         strides[1] * j:strides[1] * j + pooling[1]])
                     h_idx = strides[0] * i + flat_idx // pooling[1]
                     w_idx = strides[1] * j + flat_idx % pooling[1]
                     padding_dz[n, c, h_idx, w_idx] += next_dz[n, c, i, j]
@@ -241,15 +246,15 @@ def avg_pooling_forward(z, pooling, strides=(2, 2), padding=(0, 0)):
     out_h = (H + 2 * padding[0] - pooling[0]) // strides[0] + 1
     out_w = (W + 2 * padding[1] - pooling[1]) // strides[1] + 1
 
-    pool_z = np.zeros((N, C, out_h, out_w),dtype=np.float32)
+    pool_z = np.zeros((N, C, out_h, out_w), dtype=np.float32)
 
     for n in np.arange(N):
         for c in np.arange(C):
             for i in np.arange(out_h):
                 for j in np.arange(out_w):
                     pool_z[n, c, i, j] = np.mean(padding_z[n, c,
-                                                           strides[0] * i:strides[0] * i + pooling[0],
-                                                           strides[1] * j:strides[1] * j + pooling[1]])
+                                                 strides[0] * i:strides[0] * i + pooling[0],
+                                                 strides[1] * j:strides[1] * j + pooling[1]])
     return pool_z
 
 
@@ -277,8 +282,8 @@ def avg_pooling_backward(next_dz, z, pooling, strides=(2, 2), padding=(0, 0)):
                 for j in np.arange(out_w):
                     # 每个神经元均分梯度
                     padding_dz[n, c,
-                               strides[0] * i:strides[0] * i + pooling[0],
-                               strides[1] * j:strides[1] * j + pooling[1]] += next_dz[n, c, i, j] / (pooling[0] * pooling[1])
+                    strides[0] * i:strides[0] * i + pooling[0],
+                    strides[1] * j:strides[1] * j + pooling[1]] += next_dz[n, c, i, j] / (pooling[0] * pooling[1])
     # 返回时剔除零填充
     return _remove_padding(padding_dz, padding)  # padding_z[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
 
@@ -411,6 +416,7 @@ def test_conv():
             print("yes")
             break
 
+
 def test_conv_and_max_pooling():
     # 测试卷积和最大池化
     z = np.random.randn(3, 3, 28, 28).astype(np.float)
@@ -418,7 +424,7 @@ def test_conv_and_max_pooling():
     b = np.zeros(4).astype(np.float)
 
     next_z = conv_forward(z, K, b)
-    y_pred = max_pooling_forward_bak(next_z,pooling=(2,2))
+    y_pred = max_pooling_forward_bak(next_z, pooling=(2, 2))
     y_true = np.ones_like(y_pred)
 
     from nn.losses import mean_squared_loss
@@ -428,7 +434,7 @@ def test_conv_and_max_pooling():
         y_pred = max_pooling_forward_bak(next_z, pooling=(2, 2))
         # 反向
         loss, dy = mean_squared_loss(y_pred, y_true)
-        next_dz = max_pooling_backward_bak(dy,next_z,pooling=(2,2))
+        next_dz = max_pooling_backward_bak(dy, next_z, pooling=(2, 2))
         dK, db, _ = conv_backward(next_dz, K, z)
         K -= 0.001 * dK
         b -= 0.001 * db
@@ -439,6 +445,7 @@ def test_conv_and_max_pooling():
         if np.allclose(y_true, y_pred):
             print("yes")
             break
+
 
 if __name__ == "__main__":
     # main()
