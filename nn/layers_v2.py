@@ -293,6 +293,20 @@ def max_pooling_backward(next_dz, z, pooling, strides=(2, 2), padding=(0, 0)):
     return _remove_padding(padding_dz, padding)  # padding_z[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
 
 
+def global_avg_pooling_backward(next_dz, z):
+    """
+    全局平均池化反向过程
+    :param next_dz: 全局最大池化梯度，形状(N,C)
+    :param z: 卷积层矩阵,形状(N,C,H,W)，N为batch_size，C为通道数
+    :return dz: [N,C,H,W]
+    """
+    _, _, H, W = z.shape
+    dz = np.zeros_like(z)
+    # 梯度平分给相关神经元
+    dz += next_dz[:, :, np.newaxis, np.newaxis] / (H * W)
+    return dz
+
+
 def test_single_conv():
     """
     两个卷积结果一样，速度相差百倍以上
@@ -368,9 +382,9 @@ def test_max_pooling():
     print(np.allclose(o1, o2))
 
 
-def test_max_pooling_backword():
+def test_max_pooling_backward():
     """
-    池化结果一样，速度差约十倍
+    池化梯度结果一样，速度差约十倍
     :return:
     """
     next_dz = np.random.randn(4, 24, 112, 112)
@@ -386,9 +400,28 @@ def test_max_pooling_backword():
     print(np.allclose(o1, o2))
 
 
+def test_global_avg_pooling_backward():
+    """
+    池化结果一样，速度差约十倍
+    :return:
+    """
+    next_dz = np.random.randn(32, 512)
+    z = np.random.randn(32, 512, 7, 7)
+    from layers import global_avg_pooling_backward as global_avg_pooling_backward_v1
+    s = time.time()
+    o1 = global_avg_pooling_backward_v1(next_dz, z)
+    print("global avg pooling backward v1 耗时:{}".format(time.time() - s))
+    s = time.time()
+    o2 = global_avg_pooling_backward(next_dz, z)
+    print("global avg pooling backward v2 耗时:{}".format(time.time() - s))
+
+    print(np.allclose(o1, o2))
+
+
 if __name__ == '__main__':
     # test_single_conv()
     # test_conv()
     # test_conv_backward()
-    test_max_pooling()
-    test_max_pooling_backword()
+    # test_max_pooling()
+    # test_max_pooling_backward()
+    test_global_avg_pooling_backward()
