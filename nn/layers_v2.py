@@ -259,6 +259,40 @@ def max_pooling_forward(z, pooling, strides=(2, 2), padding=(0, 0)):
     return pool_z
 
 
+def max_pooling_backward(next_dz, z, pooling, strides=(2, 2), padding=(0, 0)):
+    """
+    最大池化反向过程
+    :param next_dz：损失函数关于最大池化输出的损失
+    :param z: 卷积层矩阵,形状(N,C,H,W)，N为batch_size，C为通道数
+    :param pooling: 池化大小(k1,k2)
+    :param strides: 步长
+    :param padding: 0填充
+    :return:
+    """
+    N, C, H, W = z.shape
+    pad_h, pad_w = padding
+    sh, sw = strides
+    kh, kw = pooling
+    _, _, out_h, out_w = next_dz.shape
+    # 零填充
+    padding_z = np.lib.pad(z, ((0, 0), (0, 0), (pad_h, pad_h), (pad_w, pad_w)), 'constant',
+                           constant_values=0)
+    # 零填充后的梯度
+    padding_dz = np.zeros_like(padding_z)
+    zeros = np.zeros((N, C, sh, sw))
+    for i in np.arange(out_h):
+        for j in np.arange(out_w):
+            # 找到最大值的那个元素坐标，将梯度传给这个坐标
+            cur_padding_z = padding_z[:, :, sh * i:sh * i + kh, sw * j:sw * j + kw]
+            cur_padding_dz = padding_dz[:, :, sh * i:sh * i + kh, sw * j:sw * j + kw]
+            max_val = np.max(cur_padding_z, axis=(2, 3))  # [N,C]
+            cur_padding_dz += np.where(cur_padding_z == max_val[:, :, np.newaxis, np.newaxis],
+                                       next_dz[:, :, i:i + 1, j:j + 1],
+                                       zeros)
+    # 返回时剔除零填充
+    return _remove_padding(padding_dz, padding)  # padding_z[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
+
+
 def test_single_conv():
     """
     两个卷积结果一样，速度相差百倍以上
@@ -334,8 +368,27 @@ def test_max_pooling():
     print(np.allclose(o1, o2))
 
 
+def test_max_pooling_backword():
+    """
+    池化结果一样，速度差约十倍
+    :return:
+    """
+    next_dz = np.random.randn(4, 24, 112, 112)
+    z = np.random.randn(4, 24, 224, 224)
+    from layers import max_pooling_backward_bak
+    s = time.time()
+    o1 = max_pooling_backward_bak(next_dz, z, (2, 2))
+    print("max pooling backward v1 耗时:{}".format(time.time() - s))
+    s = time.time()
+    o2 = max_pooling_backward(next_dz, z, (2, 2))
+    print("max pooling backward v2 耗时:{}".format(time.time() - s))
+
+    print(np.allclose(o1, o2))
+
+
 if __name__ == '__main__':
     # test_single_conv()
     # test_conv()
     # test_conv_backward()
     test_max_pooling()
+    test_max_pooling_backword()
