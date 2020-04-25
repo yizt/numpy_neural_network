@@ -127,15 +127,23 @@ def _conv_forward(z, K, b, padding=(0, 0)):
 
     # 扩维
     padding_z = padding_z[:, :, np.newaxis, :, :]  # 扩维[N,C,1,H,W] 与K [C,D,K1,K2] 可以广播
-    K = K[:, :, :, :, np.newaxis, np.newaxis]
     conv_z = np.zeros((N, D, oh, ow))
 
     # 批量卷积
-    for c in range(C):
-        for i in range(k1):
-            for j in range(k2):
-                # [N,C,1,oh,ow]*[C,D,1,1] =>[N,C,D,oh,ow]
-                conv_z += padding_z[:, c, :, i:i + oh, j:j + ow] * K[c, :, i, j]
+    if k1 * k2 < oh * ow * 10:
+        K = K[:, :, :, :, np.newaxis, np.newaxis]
+        for c in range(C):
+            for i in range(k1):
+                for j in range(k2):
+                    # [N,1,oh,ow]*[D,1,1] =>[N,D,oh,ow]
+                    conv_z += padding_z[:, c, :, i:i + oh, j:j + ow] * K[c, :, i, j]
+    else:  # 大卷积核，遍历空间更高效
+        # print('大卷积核，遍历空间更高效')
+        for c in range(C):
+            for h in range(oh):
+                for w in range(ow):
+                    # [N,1,k1,k2]*[D,k1,k2] =>[N,D,k1,k2] => [N,D]
+                    conv_z[:, :, h, w] += np.sum(padding_z[:, c, :, h:h + k1, w:w + k2] * K[c], axis=(2, 3))
 
     # 增加偏置 [N, D, oh, ow]+[D, 1, 1]
     conv_z += b[:, np.newaxis, np.newaxis]
@@ -268,15 +276,15 @@ def test_conv_backward():
 
     from layers import conv_backward as conv_backward_v1
     s = time.time()
-    dk1, db1, dz1 = conv_backward_v1(next_dz.astype(np.float32), K.astype(np.float32), z.astype(np.float32), padding=(1, 1))
+    dk1, db1, dz1 = conv_backward_v1(next_dz, K, z, padding=(1, 1))
     print("v1 耗时:{}".format(time.time() - s))
     s = time.time()
     dk2, db2, dz2 = conv_backward(next_dz, K, z, padding=(1, 1))
     print("v2 耗时:{}".format(time.time() - s))
 
-    print(np.allclose(dk1, dk2, atol=1.e-6),
-          np.allclose(db1, db2, atol=1.e-6),
-          np.allclose(dz1, dz2, atol=1.e-6))
+    print(np.allclose(dk1, dk2),
+          np.allclose(db1, db2),
+          np.allclose(dz1, dz2))
 
 
 if __name__ == '__main__':
