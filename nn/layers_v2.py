@@ -58,7 +58,7 @@ def conv_forward_v1(z, K, b, padding=(0, 0)):
     :param K: 卷积核,形状(C,D,k1,k2), C为输入通道数，D为输出通道数
     :param b: 偏置,形状(D,)
     :param padding: padding
-    :return: 卷积结果
+    :return: conv_z: 卷积结果[N,D,oH,oW]
     """
     padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]), (padding[1], padding[1])), 'constant',
                            constant_values=0)
@@ -83,7 +83,7 @@ def _conv_forward_old(z, K, b, padding=(0, 0)):
     :param K: 卷积核,形状(C,D,k1,k2), C为输入通道数，D为输出通道数
     :param b: 偏置,形状(D,)
     :param padding: padding
-    :return: 卷积结果
+    :return: conv_z: 卷积结果[N,D,oH,oW]
     """
     padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]), (padding[1], padding[1])), 'constant',
                            constant_values=0)
@@ -115,7 +115,7 @@ def _conv_forward(z, K, b, padding=(0, 0)):
     :param K: 卷积核,形状(C,D,k1,k2), C为输入通道数，D为输出通道数
     :param b: 偏置,形状(D,)
     :param padding: padding
-    :return: 卷积结果
+    :return: conv_z: 卷积结果[N,D,oH,oW]
     """
     padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]), (padding[1], padding[1])), 'constant',
                            constant_values=0)
@@ -138,6 +138,44 @@ def _conv_forward(z, K, b, padding=(0, 0)):
     # 增加偏置 [N, D, oh, ow]+[D, 1, 1]
     conv_z += b[:, np.newaxis, np.newaxis]
     return conv_z
+
+
+def conv_forward(z, K, b, padding=(0, 0), strides=(1, 1)):
+    """
+    多通道卷积前向过程
+    :param z: 卷积层矩阵,形状(N,C,H,W)，N为batch_size，C为通道数
+    :param K: 卷积核,形状(C,D,k1,k2), C为输入通道数，D为输出通道数
+    :param b: 偏置,形状(D,)
+    :param padding: padding
+    :param strides: 步长
+    :return: conv_z: 卷积结果[N,D,oH,oW]
+    """
+    # 长宽方向步长
+    sh, sw = strides
+    origin_conv_z = _conv_forward(z, K, b, padding)
+    # 步长为1时的输出卷积尺寸
+    N, D, oh, ow = origin_conv_z.shape
+    if sh * sw == 1:
+        return origin_conv_z
+    # 高度方向步长大于1
+    elif sw == 1:
+        conv_z = np.zeros((N, D, oh // sh, ow))
+        for i in range(oh // sh):
+            conv_z[:, :, i, :] = origin_conv_z[:, :, i * sh, :]
+        return conv_z
+    # 宽度方向步长大于1
+    elif sh == 1:
+        conv_z = np.zeros((N, D, oh, ow // sw))
+        for j in range(ow // sw):
+            conv_z[:, :, :, j] = origin_conv_z[:, :, :, j * sw]
+        return conv_z
+    # 高度宽度方向步长都大于1
+    else:
+        conv_z = np.zeros((N, D, oh // sh, ow // sw))
+        for i in range(oh // sh):
+            for j in range(ow // sw):
+                conv_z[:, :, i, j] = origin_conv_z[:, :, i*sh, j * sw]
+        return conv_z
 
 
 def test_single_conv():
