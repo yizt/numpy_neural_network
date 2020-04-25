@@ -8,12 +8,15 @@
 from typing import List
 
 from activations import *
-from layers import *
+from layers import fc_forward, fc_backward, global_avg_pooling_forward, flatten_forward, flatten_backward
+from layers_v2 import conv_forward, conv_backward, max_pooling_forward, max_pooling_backward, \
+    global_avg_pooling_backward
 from losses import *
 from optimizers import *
 
-pyximport.install()
-from clayers import *
+
+# pyximport.install()
+# from clayers import *
 
 
 class BaseModule(object):
@@ -355,19 +358,21 @@ def test_linear():
                   [5, 2, 6]])
     b = np.array([2, 9, 3])
     # 产生训练样本
-    x_data = np.random.randint(0, 10, 1000).reshape(500, 2)
+    x_data = np.random.randn(500, 2)
     y_data = np.dot(x_data, W) + b
 
     def next_sample(batch_size=1):
         idx = np.random.randint(500)
         return x_data[idx:idx + batch_size], y_data[idx:idx + batch_size]
 
-    m = Model([Linear(2, 3, name='fc1')])
-    sgd = SGD(m.weights, lr=1e-2)
+    fc_layer = Linear(2, 3, name='fc1')
+    # fc_layer.weights['fc1_weight'] *= 1e-2  # 单层权重初始化要小
+    m = Model([fc_layer])
+    sgd = SGD(m.weights, lr=1e-3)
     i = 0
     loss = 1
     while loss > 1e-15:
-        x, y_true = next_sample(2)  # 获取当前样本
+        x, y_true = next_sample(4)  # 获取当前样本
         # 前向传播
         y = m.forward(x)
         # 反向传播更新梯度
@@ -378,7 +383,8 @@ def test_linear():
 
         # 更新迭代次数
         i += 1
-        if i % 1000 == 0:
+        if i % 10000 == 0:
+            print("y_pred：{},y_true:{}".format(y, y_true))
             print("\n迭代{}次，当前loss:{}, 当前权重:{},当前偏置{},梯度:{}".format(i, loss,
                                                                    m.layers[0].weight,
                                                                    m.layers[0].bias,
