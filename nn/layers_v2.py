@@ -75,9 +75,10 @@ def conv_forward_v1(z, K, b, padding=(0, 0)):
     return conv_z
 
 
-def _conv_forward(z, K, b, padding=(0, 0)):
+def _conv_forward_old(z, K, b, padding=(0, 0)):
     """
-    多通道卷积前向过程
+    占用太多内存反而慢
+    多通道卷积前向过程;
     :param z: 卷积层矩阵,形状(N,C,H,W)，N为batch_size，C为通道数
     :param K: 卷积核,形状(C,D,k1,k2), C为输入通道数，D为输出通道数
     :param b: 偏置,形状(D,)
@@ -107,6 +108,38 @@ def _conv_forward(z, K, b, padding=(0, 0)):
     return conv_z
 
 
+def _conv_forward(z, K, b, padding=(0, 0)):
+    """
+    多通道卷积前向过程
+    :param z: 卷积层矩阵,形状(N,C,H,W)，N为batch_size，C为通道数
+    :param K: 卷积核,形状(C,D,k1,k2), C为输入通道数，D为输出通道数
+    :param b: 偏置,形状(D,)
+    :param padding: padding
+    :return: 卷积结果
+    """
+    padding_z = np.lib.pad(z, ((0, 0), (0, 0), (padding[0], padding[0]), (padding[1], padding[1])), 'constant',
+                           constant_values=0)
+    N, _, height, width = padding_z.shape
+    C, D, k1, k2 = K.shape
+    oh, ow = (1 + (height - k1), 1 + (width - k2))  # 输出的高度和宽度
+
+    # 扩维
+    padding_z = padding_z[:, :, np.newaxis, :, :]  # 扩维[N,C,1,H,W] 与K [C,D,K1,K2] 可以广播
+    K = K[:, :, :, :, np.newaxis, np.newaxis]
+    conv_z = np.zeros((N, D, oh, ow))
+
+    # 批量卷积
+    for c in range(C):
+        for i in range(k1):
+            for j in range(k2):
+                # [N,C,1,oh,ow]*[C,D,1,1] =>[N,C,D,oh,ow]
+                conv_z += padding_z[:, c, :, i:i + oh, j:j + ow] * K[c, :, i, j]
+
+    # 增加偏置 [N, D, oh, ow]+[D, 1, 1]
+    conv_z += b[:, np.newaxis, np.newaxis]
+    return conv_z
+
+
 def test_single_conv():
     """
     两个卷积结果一样，速度相差百倍以上
@@ -130,8 +163,8 @@ def test_conv():
     两个卷积结果一样，速度相差几十倍
     :return:
     """
-    z = np.random.randn(4, 64, 224, 224)
-    K = np.random.randn(64, 64, 3, 3)
+    z = np.random.randn(4, 3, 224, 224)
+    K = np.random.randn(3, 64, 3, 3)
     b = np.random.randn(64)
 
     s = time.time()
