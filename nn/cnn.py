@@ -23,7 +23,7 @@ def get_accuracy(net, xs, ys):
     :param ys:
     :return:
     """
-    score = net.forward(xs.astype(np.float32))
+    score = net.forward(xs.astype(np.float))
     acc = np.mean(np.argmax(score, axis=1) == np.argmax(ys, axis=1))
     return acc
 
@@ -63,7 +63,7 @@ def main(args):
     for step in range(num_steps):
         x, y_true = next_batch(args.batch_size)
         # 前向传播
-        y_predict = vgg.forward(x.astype(np.float32))
+        y_predict = vgg.forward(x.astype(np.float))
         # print('y_pred: min{},max{},mean:{}'.format(np.min(y_predict, axis=-1),
         #                                            np.max(y_predict, axis=-1),
         #                                            np.mean(y_predict, axis=-1)))
