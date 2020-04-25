@@ -103,8 +103,8 @@ class Linear(BaseModule):
         """
         super(Linear, self).__init__(**kwargs)
         # 权重参数
-        weight = np.random.randn(in_units, out_units).astype(np.float32) * np.sqrt(2 / in_units)
-        bias = np.zeros(out_units).astype(np.float32)
+        weight = np.random.randn(in_units, out_units) * np.sqrt(2 / in_units)
+        bias = np.zeros(out_units)
         # 权重对应的梯度
         g_weight = np.zeros_like(weight)
         g_bias = np.zeros_like(bias)
@@ -183,8 +183,8 @@ class Conv2D(BaseModule):
         fan_out = out_filters * kernel[0] * kernel[1]  # 输入参数量
         weight = np.random.randn(in_filters,
                                  out_filters,
-                                 *kernel).astype(np.float32) * np.sqrt(2 / (fan_in + fan_out))
-        bias = np.zeros(out_filters).astype(np.float32)
+                                 *kernel) * np.sqrt(2 / (fan_in + fan_out))
+        bias = np.zeros(out_filters)
         # 梯度
         g_weight = np.zeros_like(weight)
         g_bias = np.zeros_like(bias)
