@@ -8,8 +8,12 @@
 import time
 
 import numpy as np
+import pyximport
 
 from layers import _insert_zeros, _remove_padding
+
+pyximport.install()
+from clayers_v2 import conv_forward as c_conv_forward
 
 
 def _single_channel_conv_v1(z, K, b=0, padding=(0, 0)):
@@ -162,7 +166,8 @@ def conv_forward(z, K, b, padding=(0, 0), strides=(1, 1)):
     """
     # 长宽方向步长
     sh, sw = strides
-    origin_conv_z = _conv_forward(z, K, b, padding)
+    # origin_conv_z = _conv_forward(z, K, b, padding)
+    origin_conv_z = c_conv_forward(z, K, b, padding)  # 使用cython
     # 步长为1时的输出卷积尺寸
     N, D, oh, ow = origin_conv_z.shape
     if sh * sw == 1:
@@ -330,9 +335,9 @@ def test_conv():
     两个卷积结果一样，速度相差几十倍
     :return:
     """
-    z = np.random.randn(4, 3, 224, 224)
-    K = np.random.randn(3, 64, 3, 3)
-    b = np.random.randn(64)
+    z = np.random.randn(4, 3, 112, 112)
+    K = np.random.randn(3, 32, 3, 3)
+    b = np.random.randn(32)
     s = time.time()
     o1 = conv_forward_v1(z, K, b)
     print("v1 耗时:{}".format(time.time() - s))
@@ -340,7 +345,14 @@ def test_conv():
     o2 = _conv_forward(z, K, b)
     print("v2 耗时:{}".format(time.time() - s))
 
-    print(np.allclose(o1, o2))
+    import pyximport
+    pyximport.install()
+    from clayers_v2 import conv_forward as c_conv_forward
+    s = time.time()
+    o3 = c_conv_forward(z, K, b)
+    print("cython v2 耗时:{}".format(time.time() - s))
+
+    print(np.allclose(o1, o2), np.allclose(o2, o3))
 
 
 def test_conv_backward():
@@ -421,7 +433,7 @@ def test_global_avg_pooling_backward():
 if __name__ == '__main__':
     # test_single_conv()
     # test_conv()
-    # test_conv_backward()
+    test_conv_backward()
     # test_max_pooling()
     # test_max_pooling_backward()
-    test_global_avg_pooling_backward()
+    # test_global_avg_pooling_backward()
