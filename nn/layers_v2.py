@@ -9,6 +9,8 @@ import time
 
 import numpy as np
 
+from layers import _insert_zeros, _remove_padding
+
 
 def _single_channel_conv_v1(z, K, b=0, padding=(0, 0)):
     """
@@ -174,8 +176,49 @@ def conv_forward(z, K, b, padding=(0, 0), strides=(1, 1)):
         conv_z = np.zeros((N, D, oh // sh, ow // sw))
         for i in range(oh // sh):
             for j in range(ow // sw):
-                conv_z[:, :, i, j] = origin_conv_z[:, :, i*sh, j * sw]
+                conv_z[:, :, i, j] = origin_conv_z[:, :, i * sh, j * sw]
         return conv_z
+
+
+def conv_backward(next_dz, K, z, padding=(0, 0), strides=(1, 1)):
+    """
+    多通道卷积层的反向过程
+    :param next_dz: 卷积输出层的梯度,(N,D,H,W),H,W为卷积输出层的高度和宽度
+    :param K: 当前层卷积核，(C,D,k1,k2)
+    :param z: 卷积层矩阵,形状(N,C,H,W)，N为batch_size，C为通道数
+    :param padding: padding
+    :param strides: 步长
+    :return:
+    """
+    N, C, H, W = z.shape
+    C, D, k1, k2 = K.shape
+
+    # 卷积核梯度
+    # dK = np.zeros((C, D, k1, k2))
+    padding_next_dz = _insert_zeros(next_dz, strides)
+
+    # 卷积核高度和宽度翻转180度
+    flip_K = np.flip(K, (2, 3))
+    # 交换C,D为D,C；D变为输入通道数了，C变为输出通道数了
+    swap_flip_K = np.swapaxes(flip_K, 0, 1)
+    # 增加高度和宽度0填充
+    ppadding_next_dz = np.lib.pad(padding_next_dz, ((0, 0), (0, 0), (k1 - 1, k1 - 1), (k2 - 1, k2 - 1)), 'constant',
+                                  constant_values=0)
+    dz = conv_forward(ppadding_next_dz,
+                      swap_flip_K,
+                      np.zeros((C,), dtype=np.float))
+
+    # 求卷积和的梯度dK
+    swap_z = np.swapaxes(z, 0, 1)  # 变为(C,N,H,W)与
+    dK = conv_forward(swap_z, padding_next_dz, np.zeros((D,), dtype=np.float))
+
+    # 偏置的梯度,[N,D,H,W]=>[D]
+    db = np.sum(next_dz, axis=(0, 2, 3))  # 在高度、宽度上相加；批量大小上相加
+
+    # 把padding减掉
+    dz = _remove_padding(dz, padding)  # dz[:, :, padding[0]:-padding[0], padding[1]:-padding[1]]
+
+    return dK / N, db / N, dz
 
 
 def test_single_conv():
@@ -204,7 +247,6 @@ def test_conv():
     z = np.random.randn(4, 3, 224, 224)
     K = np.random.randn(3, 64, 3, 3)
     b = np.random.randn(64)
-
     s = time.time()
     o1 = conv_forward_v1(z, K, b)
     print("v1 耗时:{}".format(time.time() - s))
@@ -215,6 +257,29 @@ def test_conv():
     print(np.allclose(o1, o2))
 
 
+def test_conv_backward():
+    """
+    卷积反向传播
+    :return:
+    """
+    z = np.random.randn(4, 3, 224, 224)
+    K = np.random.randn(3, 64, 3, 3)
+    next_dz = np.random.randn(4, 64, 224, 224)
+
+    from layers import conv_backward as conv_backward_v1
+    s = time.time()
+    dk1, db1, dz1 = conv_backward_v1(next_dz.astype(np.float32), K.astype(np.float32), z.astype(np.float32), padding=(1, 1))
+    print("v1 耗时:{}".format(time.time() - s))
+    s = time.time()
+    dk2, db2, dz2 = conv_backward(next_dz, K, z, padding=(1, 1))
+    print("v2 耗时:{}".format(time.time() - s))
+
+    print(np.allclose(dk1, dk2, atol=1.e-6),
+          np.allclose(db1, db2, atol=1.e-6),
+          np.allclose(dz1, dz2, atol=1.e-6))
+
+
 if __name__ == '__main__':
     # test_single_conv()
-    test_conv()
+    # test_conv()
+    test_conv_backward()
