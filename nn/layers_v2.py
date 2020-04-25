@@ -229,6 +229,36 @@ def conv_backward(next_dz, K, z, padding=(0, 0), strides=(1, 1)):
     return dK / N, db / N, dz
 
 
+def max_pooling_forward(z, pooling, strides=(2, 2), padding=(0, 0)):
+    """
+    最大池化前向过程
+    :param z: 卷积层矩阵,形状(N,C,H,W)，N为batch_size，C为通道数
+    :param pooling: 池化大小(k1,k2)
+    :param strides: 步长
+    :param padding: 0填充
+    :return:
+    """
+    N, C, H, W = z.shape
+    pad_h, pad_w = padding
+    sh, sw = strides
+    kh, kw = pooling
+    # 零填充
+    padding_z = np.lib.pad(z, ((0, 0), (0, 0), (pad_h, pad_h), (pad_w, pad_w)), 'constant',
+                           constant_values=0)
+
+    # 输出的高度和宽度
+    out_h = (H + 2 * pad_h - kh) // sh + 1
+    out_w = (W + 2 * pad_w - kw) // sw + 1
+
+    pool_z = np.zeros((N, C, out_h, out_w), dtype=np.float)
+
+    for i in np.arange(out_h):
+        for j in np.arange(out_w):
+            pool_z[:, :, i, j] = np.max(padding_z[:, :, sh * i:sh * i + kh, sw * j:sw * j + kw],
+                                        axis=(2, 3))
+    return pool_z
+
+
 def test_single_conv():
     """
     两个卷积结果一样，速度相差百倍以上
@@ -287,7 +317,25 @@ def test_conv_backward():
           np.allclose(dz1, dz2))
 
 
+def test_max_pooling():
+    """
+    池化结果一样，速度差数十倍
+    :return:
+    """
+    z = np.random.randn(4, 24, 224, 224)
+    from layers import max_pooling_forward_bak
+    s = time.time()
+    o1 = max_pooling_forward_bak(z, (2, 2))
+    print("max pooling v1 耗时:{}".format(time.time() - s))
+    s = time.time()
+    o2 = max_pooling_forward(z, (2, 2))
+    print("max pooling v2 耗时:{}".format(time.time() - s))
+
+    print(np.allclose(o1, o2))
+
+
 if __name__ == '__main__':
     # test_single_conv()
     # test_conv()
-    test_conv_backward()
+    # test_conv_backward()
+    test_max_pooling()
