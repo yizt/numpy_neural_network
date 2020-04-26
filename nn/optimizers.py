@@ -52,7 +52,7 @@ class SGD(object):
         for layer in m.layers:
             for key in layer.weights.keys():
                 self.v[key] = self.momentum * self.v[key] + self.lr * layer.gradients[key]
-                layer.weights[key] -= - self.v[key]
+                layer.weights[key] -= self.v[key]
 
         # 更新迭代次数
         self.iterations += 1
