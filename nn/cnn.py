@@ -24,16 +24,16 @@ def get_accuracy(net, xs, ys, batch_size=128):
     :param batch_size:
     :return:
     """
-    scores = np.zeros_like(ys)
+    scores = np.zeros_like(ys, dtype=np.float)
     num = xs.shape[0]
     for i in range(num // batch_size):
         s = i * batch_size
         e = s + batch_size
-        scores[e:s] = net.forward(xs[e:s].astype(np.float))
+        scores[s:e] = net.forward(xs[s:e])
     # 余数处理
     remain = num % batch_size
     if remain > 0:
-        scores[-remain:] = net.forward(xs[-remain:].astype(np.float))
+        scores[-remain:] = net.forward(xs[-remain:])
     # 计算精度
     acc = np.mean(np.argmax(scores, axis=1) == np.argmax(ys, axis=1))
     return acc
