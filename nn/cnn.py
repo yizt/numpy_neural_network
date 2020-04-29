@@ -41,7 +41,9 @@ def main(args):
 
     # 网络
     vgg = VGG(image_size=32, name='vgg11')
-    opt = RmsProp(vgg.weights, lr=args.lr, decay=1e-3)
+    # opt = RmsProp(vgg.weights, lr=args.lr, decay=1e-3)
+    opt = SGD(vgg.weights, lr=args.lr, decay=args.decay)
+    opt.iterations = args.init_step
 
     # 加载权重
     if args.checkpoint:
@@ -111,9 +113,11 @@ if __name__ == '__main__':
     parse.add_argument('-o', '--save-dir', type=str, default='/tmp')
     parse.add_argument('-c', '--checkpoint', type=str, default=None)
     parse.add_argument('-b', '--batch-size', type=int, default=32)
-    parse.add_argument('--lr', type=float, default=2e-5)
+    parse.add_argument('--lr', type=float, default=1e-2)
+    parse.add_argument('--decay', type=float, default=1e-3)
     parse.add_argument('-s', '--steps', type=int, default=10000)
     parse.add_argument('--eval-only', action='store_true', default=False)
     parse.add_argument('--eval-num', type=int, default=100)
+    parse.add_argument('--init-step', type=int, default=0)
     arguments = parse.parse_args()
     main(arguments)
