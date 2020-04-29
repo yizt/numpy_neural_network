@@ -15,16 +15,27 @@ from utils import load_cifar, save_weights, load_weights
 from vgg import VGG
 
 
-def get_accuracy(net, xs, ys):
+def get_accuracy(net, xs, ys, batch_size=128):
     """
 
     :param net:
     :param xs:
     :param ys:
+    :param batch_size:
     :return:
     """
-    score = net.forward(xs.astype(np.float))
-    acc = np.mean(np.argmax(score, axis=1) == np.argmax(ys, axis=1))
+    scores = np.zeros_like(ys)
+    num = xs.shape[0]
+    for i in range(num // batch_size):
+        s = i * batch_size
+        e = s + batch_size
+        scores[e:s] = net.forward(xs[e:s].astype(np.float))
+    # 余数处理
+    remain = num % batch_size
+    if remain > 0:
+        scores[-remain:] = net.forward(xs[-remain:].astype(np.float))
+    # 计算精度
+    acc = np.mean(np.argmax(scores, axis=1) == np.argmax(ys, axis=1))
     return acc
 
 
@@ -55,7 +66,7 @@ def main(args):
     if args.eval_only:
         indices = np.random.choice(len(x_test), args.eval_num, replace=False)
         print('{} start evaluate'.format(time.asctime(time.localtime(time.time()))))
-        acc = get_accuracy(vgg, x_test[indices], ys=y_test[indices])
+        acc = get_accuracy(vgg, x_test[indices], y_test[indices], args.batch_size)
         print('{} acc on test dataset is :{:.3f}'.format(time.asctime(time.localtime(time.time())),
                                                          acc))
         return
