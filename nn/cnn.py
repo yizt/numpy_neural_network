@@ -73,7 +73,7 @@ def main(args):
 
     # 训练
     num_steps = args.steps
-    for step in range(num_steps):
+    for step in range(args.init_step, num_steps):
         x, y_true = next_batch(args.batch_size)
         # 前向传播
         y_predict = vgg.forward(x.astype(np.float))
