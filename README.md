@@ -79,7 +79,7 @@ jupyter notebook --allow-root --ip 0.0.0.0
 
 [2_1-numpy卷积层实现](2_1-numpy卷积层实现.md) 、[csdn地址](https://blog.csdn.net/csuyzt/article/details/82668153)
 
-[2_2-numpy池化层实现]() 、[csdn地址](https://blog.csdn.net/csuyzt/article/details/82668941)
+[2_2-numpy池化层实现](2_2-numpy池化层实现.md) 、[csdn地址](https://blog.csdn.net/csuyzt/article/details/82668941)
 
 [2_3-numpy-cnn-mnist手写数字识别](2_3-numpy-cnn-mnist手写数字识别.md) 、[csdn地址](https://blog.csdn.net/csuyzt/article/details/82669885)
 
@@ -87,11 +87,9 @@ jupyter notebook --allow-root --ip 0.0.0.0
 
 
 
-## 其它
+## 经典网络
 
-模型的保存、部署
-
-精调网络
+[3_1-VGG](3_1-VGG.md)
 
 
 
