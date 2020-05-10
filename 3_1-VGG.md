@@ -97,6 +97,8 @@ python cnn.py -d /sdb/tmp/open_dataset/cifar-10-batches-py/
 
 ## 预测
 
+​         模型下载[weights-9900.pkl](https://pan.baidu.com/s/1KpiidX7Y5vPz9QjF9xlofA) 提取码: kxzs ;
+
 a) 1w步,测试集准确率0.576
 
 ```shell
