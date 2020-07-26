@@ -297,7 +297,7 @@ def global_max_pooling_forward(z):
     return np.max(np.max(z, axis=-1), -1)
 
 
-def global_max_pooling_forward(next_dz, z):
+def global_max_pooling_backward(next_dz, z):
     """
     全局最大池化反向过程
     :param next_dz: 全局最大池化梯度，形状(N,C)
