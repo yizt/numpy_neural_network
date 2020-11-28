@@ -85,7 +85,7 @@ class AdaGrad(object):
         # 更新权重平方和累加量 和 梯度
         for layer in m.layers:
             for key in layer.weights.keys():
-                self.s[key] += np.square(layer.weights[key])
+                self.s[key] += np.square(layer.gradients[key])
                 layer.weights[key] -= self.lr * layer.gradients[key] / np.sqrt(self.s[key] + self.epsilon)
         # 更新迭代次数
         self.iterations += 1
@@ -120,7 +120,7 @@ class RmsProp(object):
         # 更新权重平方和累加量 和 梯度
         for layer in m.layers:
             for key in layer.weights.keys():
-                self.s[key] = self.gamma * self.s[key] + (1 - self.gamma) * np.square(layer.weights[key])
+                self.s[key] = self.gamma * self.s[key] + (1 - self.gamma) * np.square(layer.gradients[key])
                 layer.weights[key] -= self.lr * layer.gradients[key] / np.sqrt(self.s[key] + self.epsilon)
         # 更新迭代次数
         self.iterations += 1
