@@ -37,13 +37,14 @@ def tanh_forward(z):
     return np.tanh(z)
 
 
-def tanh_backward(next_dz):
+def tanh_backward(next_dz, z):
     """
     tanh激活反向过程
     :param next_dz:
+    :param z:
     :return:
     """
-    return 1 - np.square(np.tanh(next_dz))
+    return next_dz(1 - np.square(np.tanh(z)))
 
 
 def relu_forward(z):
